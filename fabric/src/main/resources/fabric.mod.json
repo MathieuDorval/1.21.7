@@ -1,0 +1,38 @@
+{
+  "schemaVersion": 1,
+  "id": "ores",
+  "version": "${version}",
+  "name": "Ores mod",
+  "description": "This is an example description! Tell everyone what your mod is about!",
+  "authors": [
+    "Me!"
+  ],
+  "contact": {
+    "homepage": "https://fabricmc.net/",
+    "sources": "https://github.com/FabricMC/fabric-example-mod"
+  },
+  "license": "CC0-1.0",
+  "icon": "assets/ores/icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.ores.fabric.ExampleModFabric"
+    ],
+    "client": [
+      "com.ores.fabric.client.ExampleModFabricClient"
+    ]
+  },
+  "mixins": [
+    "ores.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.17.0",
+    "minecraft": "~1.21.7",
+    "java": ">=21",
+    "architectury": ">=17.0.6",
+    "fabric-api": "*"
+  },
+  "suggests": {
+    "another-mod": "*"
+  }
+}
