@@ -7,9 +7,9 @@ license = "Insert License Here"
 modId = "ores"
 version = "${version}"
 displayName = "Ores mod"
-authors = "Me!"
+authors = "__mathieu"
 description = '''
-This is an example description! Tell everyone what your mod is about!
+Unify ores
 '''
 #logoFile = ""
 

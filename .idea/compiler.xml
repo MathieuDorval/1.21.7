@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <bytecodeTargetLevel target="21" />
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="ores.common" options="-AoutRefMapFile=C:\Users\mathi\code\ORES\common\build\classes\java\main\ores-common-common-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\mathi\code\ORES\common\build\loom-cache\mixin-map-loom.mappings.1_21_7.layered+hash.40359-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\mathi\.gradle\caches\fabric-loom\1.21.7\loom.mappings.1_21_7.layered+hash.40359-v2\mappings.tiny" />
+      <module name="ores.common.main" options="-AoutRefMapFile=C:\Users\mathi\code\ORES\common\build\classes\java\main\ores-common-common-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\mathi\code\ORES\common\build\loom-cache\mixin-map-loom.mappings.1_21_7.layered+hash.40359-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\mathi\.gradle\caches\fabric-loom\1.21.7\loom.mappings.1_21_7.layered+hash.40359-v2\mappings.tiny" />
+      <module name="ores.common.test" options="-AoutRefMapFile=C:\Users\mathi\code\ORES\common\build\classes\java\test\test-ores-common-common-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\mathi\code\ORES\common\build\loom-cache\mixin-map-loom.mappings.1_21_7.layered+hash.40359-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\mathi\.gradle\caches\fabric-loom\1.21.7\loom.mappings.1_21_7.layered+hash.40359-v2\mappings.tiny" />
+      <module name="ores.fabric" options="-AoutRefMapFile=C:\Users\mathi\code\ORES\fabric\build\classes\java\main\ores-fabric-fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\mathi\code\ORES\fabric\build\loom-cache\mixin-map-loom.mappings.1_21_7.layered+hash.40359-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\mathi\.gradle\caches\fabric-loom\1.21.7\loom.mappings.1_21_7.layered+hash.40359-v2\mappings.tiny" />
+      <module name="ores.fabric.main" options="-AoutRefMapFile=C:\Users\mathi\code\ORES\fabric\build\classes\java\main\ores-fabric-fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\mathi\code\ORES\fabric\build\loom-cache\mixin-map-loom.mappings.1_21_7.layered+hash.40359-v2.main.tiny -AinMapFileNamedIntermediary=C:\Users\mathi\.gradle\caches\fabric-loom\1.21.7\loom.mappings.1_21_7.layered+hash.40359-v2\mappings.tiny" />
+      <module name="ores.fabric.test" options="-AoutRefMapFile=C:\Users\mathi\code\ORES\fabric\build\classes\java\test\test-ores-fabric-fabric-refmap.json -AdefaultObfuscationEnv=named:intermediary -Aquiet=true -AoutMapFileNamedIntermediary=C:\Users\mathi\code\ORES\fabric\build\loom-cache\mixin-map-loom.mappings.1_21_7.layered+hash.40359-v2.test.tiny -AinMapFileNamedIntermediary=C:\Users\mathi\.gradle\caches\fabric-loom\1.21.7\loom.mappings.1_21_7.layered+hash.40359-v2\mappings.tiny" />
+    </option>
+  </component>
+</project>
