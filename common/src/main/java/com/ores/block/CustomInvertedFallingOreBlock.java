@@ -29,7 +29,8 @@ public class CustomInvertedFallingOreBlock extends CustomInvertedFallingBlock {
     );
 
     public CustomInvertedFallingOreBlock(Properties properties, UniformInt xpRange) {
-        super(properties);
+        // Correction ici : on passe 'false' pour le paramètre 'dropsOnFalling'
+        super(properties, false);
         this.xpRange = xpRange;
     }
 

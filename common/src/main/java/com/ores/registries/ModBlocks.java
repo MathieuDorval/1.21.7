@@ -2,6 +2,7 @@ package com.ores.registries;
 
 import com.ores.ORESMod;
 import com.ores.block.*;
+import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -50,12 +51,19 @@ public class ModBlocks {
                             DYNAMIC_BLOCKS.put(blockId, fallingBlockSupplier);
                         }
                         break;
+                    case INVERTED_FALLING_BLOCK:
+                        if (materialBlockProps != null && variantBlockProps != null && variantBlockProps.dropsOnFalling() != null) {
+                            RegistrySupplier<Block> invertedFallingBlock = registerBlock(blockId, () -> new CustomInvertedFallingBlock(buildBlockProperties(blockId, materialBlockProps, variantBlockProps), variantBlockProps.dropsOnFalling()));
+                            DYNAMIC_BLOCKS.put(blockId, invertedFallingBlock);
+                        }
+                        break;
                     case ORE:
+                        if (!ModConfig.isOreVariantEnabled(variant.name())) continue;
                         if (materialOreProps != null && variantOreProps != null) {
                             BlockBehaviour.Properties oreProps = buildOreProperties(blockId, materialOreProps, variantOreProps);
                             RegistrySupplier<Block> oreSupplier;
                             if (materialOreProps.isRedstoneLike()) {
-                                oreSupplier = registerBlock(blockId, () -> new CustomRedstoneOreBlock(oreProps, UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp()), 0xFF5555));
+                                oreSupplier = registerBlock(blockId, () -> new CustomRedstoneOreBlock(oreProps, UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp()), variantOreProps.mapColor().col));
                             } else {
                                 oreSupplier = registerBlock(blockId, () -> new DropExperienceBlock(UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp()), oreProps));
                             }
@@ -63,31 +71,25 @@ public class ModBlocks {
                         }
                         break;
                     case FALLING_ORE:
+                        if (!ModConfig.isOreVariantEnabled(variant.name())) continue;
                         if (materialOreProps != null && variantOreProps != null) {
                             BlockBehaviour.Properties fallingOreProps = buildOreProperties(blockId, materialOreProps, variantOreProps);
                             RegistrySupplier<Block> fallingOreSupplier;
                             if (materialOreProps.isRedstoneLike()) {
-                                fallingOreSupplier = registerBlock(blockId, () -> new CustomFallingRedstoneOreBlock(fallingOreProps, UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp()), 0xFF5555));
+                                fallingOreSupplier = registerBlock(blockId, () -> new CustomFallingRedstoneOreBlock(fallingOreProps, UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp()), variantOreProps.mapColor().col));
                             } else {
                                 fallingOreSupplier = registerBlock(blockId, () -> new CustomFallingOreBlock(fallingOreProps, UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp())));
                             }
                             DYNAMIC_BLOCKS.put(blockId, fallingOreSupplier);
                         }
                         break;
-//                    ===== NOT IMPLEMENTED =====
-//                    case INVERTED_FALLING_BLOCK:
-//                        if (blockVariantProps != null) {
-//                            RegistrySupplier<Block> invertedFallingBlock = registerBlock(blockId, () -> new CustomInvertedFallingBlock(BlockProps(blockId)));
-//                            DYNAMIC_BLOCKS.put(blockId, invertedFallingBlock);
-//                        }
-//                        break;
-//                    case INVERTED_FALLING_ORE:
-//                        if (oreMaterialProps != null) {
-//                            RegistrySupplier<Block> invertedFallingOre = registerBlock(blockId, () -> new CustomInvertedFallingOreBlock(OreProps(blockId), UniformInt.of(oreMaterialProps.minXp(), oreMaterialProps.maxXp())));
-//                            DYNAMIC_BLOCKS.put(blockId, invertedFallingOre);
-//                        }
-//                        break;
-//                    ===== NOT IMPLEMENTED =====
+                    case INVERTED_FALLING_ORE:
+                        if (!ModConfig.isOreVariantEnabled(variant.name())) continue;
+                        if (materialOreProps != null && variantOreProps != null) {
+                            RegistrySupplier<Block> invertedFallingOre = registerBlock(blockId, () -> new CustomInvertedFallingOreBlock(buildOreProperties(blockId, materialOreProps, variantOreProps), UniformInt.of(materialOreProps.minXp(), materialOreProps.maxXp())));
+                            DYNAMIC_BLOCKS.put(blockId, invertedFallingOre);
+                        }
+                        break;
                 }
             }
         }

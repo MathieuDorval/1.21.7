@@ -1,6 +1,7 @@
 package com.ores.registries;
 
 import com.ores.ORESMod;
+import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -9,6 +10,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -43,7 +45,7 @@ public class ModItems {
 
                     case BLOCK:
                     case FALLING_BLOCK:
-//                    case INVERTED_FALLING_BLOCK:
+                    case INVERTED_FALLING_BLOCK:
                         if (blockSupplier != null) {
                             RegistrySupplier<Item> blockItemSupplier = registerItem(itemId, () -> new BlockItem(blockSupplier.get(), applyCombinedProperties(BlocksProps(itemId), material, variant)));
                             DYNAMIC_ITEMS.put(itemId, blockItemSupplier);
@@ -52,7 +54,9 @@ public class ModItems {
 
                     case ORE:
                     case FALLING_ORE:
-//                    case INVERTED_FALLING_ORE:
+                    case INVERTED_FALLING_ORE:
+                        // La vérification de la config est gérée dans ModBlocks.
+                        // Si le bloc n'a pas été créé, blockSupplier sera null et le BlockItem ne sera pas créé.
                         if (blockSupplier != null) {
                             RegistrySupplier<Item> oreItemSupplier = registerItem(itemId, () -> new BlockItem(blockSupplier.get(), OresProps(itemId)));
                             DYNAMIC_ITEMS.put(itemId, oreItemSupplier);
@@ -70,6 +74,7 @@ public class ModItems {
         return ITEMS.register(ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, name), item);
     }
 
+    // --- Méthodes pour les propriétés de base ---
     public static Item.Properties ItemsProps(String name){
         return new Item.Properties().setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, name))).arch$tab(ModCreativeTab.ITEMS_TAB);
     }
@@ -80,6 +85,9 @@ public class ModItems {
         return new Item.Properties().setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, name))).arch$tab(ModCreativeTab.ORES_TAB);
     }
 
+    /**
+     * Applique les propriétés combinées par-dessus les propriétés de base.
+     */
     private static Item.Properties applyCombinedProperties(Item.Properties props, Materials material, Variants variant) {
         Materials.ItemProps materialProps = material.getItemProps();
         Variants.ItemProps variantProps = variant.getItemProps();

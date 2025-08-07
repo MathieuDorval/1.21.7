@@ -32,7 +32,7 @@ public enum Variants {
     DRIPSTONE_ORE("dripstone_%s_ore", Category.ORE, new OreProps(3.0f, 3.0f, SoundType.DRIPSTONE_BLOCK, MapColor.DIRT, NoteBlockInstrument.BASEDRUM, null, null, null, null, null, 0, Materials.Tools.PICKAXE, "minecraft:dripstone_block"));
 
 
-    public enum Category { ITEM, BLOCK, FALLING_BLOCK, GLASS, ORE, FALLING_ORE }
+    public enum Category { ITEM, BLOCK, FALLING_BLOCK, INVERTED_FALLING_BLOCK, GLASS, ORE, FALLING_ORE, INVERTED_FALLING_ORE }
     public enum ColorType { BASE, RAW }
 
     public record ItemProps(

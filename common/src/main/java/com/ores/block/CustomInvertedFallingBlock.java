@@ -13,8 +13,11 @@ import org.jetbrains.annotations.NotNull;
 
 public class CustomInvertedFallingBlock extends Block {
 
-    public CustomInvertedFallingBlock(Properties properties) {
+    private final boolean dropsOnFalling;
+
+    public CustomInvertedFallingBlock(Properties properties, boolean dropsOnFalling) {
         super(properties.randomTicks());
+        this.dropsOnFalling = dropsOnFalling;
     }
 
 
@@ -34,6 +37,8 @@ public class CustomInvertedFallingBlock extends Block {
             level.removeBlock(pos, false);
             level.setBlock(posAbove, state, 3);
         }
+        // Note : La logique pour utiliser 'this.dropsOnFalling' irait ici,
+        // par exemple dans un bloc 'else' si le bloc ne peut pas monter.
     }
 
     @Override
