@@ -14,7 +14,7 @@ public enum Variants {
     SELF("%s", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, false,100, true, ColorType.BASE)),
     INGOT("%s_ingot", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, true, 100, true, ColorType.BASE)),
     RAW("raw_%s", Category.ITEM, new ItemProps(null, null, null, false, null, false, ColorType.RAW)),
-    NUGGET("%s_nugget", Category.ITEM, new ItemProps(16, Rarity.RARE, false, false, null, false, ColorType.BASE)),
+    NUGGET("%s_nugget", Category.ITEM, new ItemProps(16, Rarity.COMMON, false, false, 12, false, ColorType.BASE)),
     SCRAP("%s_scrap", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, false, null, false, ColorType.RAW)),
     // -=-=-=- BLOCKS -=-=-=-
     // === VANILLA ===

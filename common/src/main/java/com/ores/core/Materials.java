@@ -70,6 +70,12 @@ public enum Materials {
             new BlockProps(50.0f, 1200.0f, SoundType.NETHERITE_BLOCK, MapColor.COLOR_BLACK, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 3, Tools.PICKAXE),
             null,
             new VanillaExclusions(List.of("netherite_ingot", "netherite_block", "netherite_scrap"))
+    ),
+    TIN("tin",  "ores:tin_ingot",
+            new ItemProps(64, Rarity.EPIC, true, true, null, true),
+            new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.RAW_IRON, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
+            null,
+            null
     );
 
     // --- Enums Internes ---

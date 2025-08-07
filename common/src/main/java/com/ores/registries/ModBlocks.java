@@ -27,11 +27,18 @@ public class ModBlocks {
 
     public static void initBlocks(){
         for (Materials material : Materials.values()) {
-            List<String> exclusions = material.getVanillaExclusions().excludedVariantIds();
+            Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
 
             for (Variants variant : Variants.values()) {
                 String blockId = variant.getFormattedId(material.getId());
-                if (exclusions != null && exclusions.contains(blockId)) continue;
+
+                // Applique les exclusions uniquement si l'objet n'est pas nul
+                if (vanillaExclusions != null) {
+                    List<String> exclusions = vanillaExclusions.excludedVariantIds();
+                    if (exclusions != null && exclusions.contains(blockId)) {
+                        continue;
+                    }
+                }
 
                 Materials.BlockProps materialBlockProps = material.getBlockProps();
                 Variants.BlockProps variantBlockProps = variant.getBlockProps();
