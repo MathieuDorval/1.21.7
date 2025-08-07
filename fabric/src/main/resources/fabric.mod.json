@@ -22,6 +22,9 @@
     ],
     "fabric-datagen": [
       "com.ores.fabric.datagen.DataGenerator"
+    ],
+    "client-datagen": [
+      "com.ores.fabric.datagen.ClientDataGenerator"
     ]
   },
   "depends": {
