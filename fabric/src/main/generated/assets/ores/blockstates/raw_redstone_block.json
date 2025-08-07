@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ores:block/raw_redstone_block"
+    }
+  }
+}

@@ -7,6 +7,12 @@ public class DataGenerator implements DataGeneratorEntrypoint {
 
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
+        FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
 
+        // Enregistrement des fournisseurs de données côté serveur (tables de butin)
+        pack.addProvider(ModLootTableProvider::new);
+
+        // Enregistrement des fournisseurs de données côté client (modèles de blocs/objets)
+        pack.addProvider(ModModelProvider::new);
     }
 }

@@ -21,7 +21,6 @@ public class ModModelProvider extends FabricModelProvider {
     public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
         for (RegistrySupplier<Block> blockSupplier : ModBlocks.DYNAMIC_BLOCKS.values()) {
             blockStateModelGenerator.createTrivialCube(blockSupplier.get());
-
         }
     }
 

@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "ores:block/calcite_coal_ore"
+    }
+  }
+}
