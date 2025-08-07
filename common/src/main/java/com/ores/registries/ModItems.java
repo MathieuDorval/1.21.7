@@ -9,7 +9,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.level.block.Block;
@@ -69,7 +68,6 @@ public class ModItems {
         ITEMS.register();
     }
 
-
     public static RegistrySupplier<Item> registerItem(String name, Supplier<Item> item){
         return ITEMS.register(ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, name), item);
     }
@@ -90,6 +88,7 @@ public class ModItems {
 
         if (materialProps == null || variantProps == null) return props;
 
+        // --- maxStackSize ---
         if (materialProps.maxStackSize() != null && variantProps.maxStackSize() != null) {
             int minStack = Math.min(materialProps.maxStackSize(), variantProps.maxStackSize());
             if (minStack != 64) {
@@ -97,6 +96,7 @@ public class ModItems {
             }
         }
 
+        // --- Rarity ---
         if (materialProps.rarity() != null && variantProps.rarity() != null) {
             Rarity higherRarity = materialProps.rarity().ordinal() > variantProps.rarity().ordinal() ? materialProps.rarity() : variantProps.rarity();
             if (higherRarity != Rarity.COMMON) {
@@ -104,6 +104,7 @@ public class ModItems {
             }
         }
 
+        // --- fireResistant ---
         if (materialProps.isFireResistant() != null && variantProps.isFireResistant() != null) {
             if (materialProps.isFireResistant() || variantProps.isFireResistant()) {
                 props.fireResistant();
