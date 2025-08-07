@@ -16,6 +16,12 @@
   "entrypoints": {
     "main": [
       "com.ores.fabric.ORESModFabric"
+    ],
+    "client": [
+      "com.ores.fabric.client.ORESModFabricClient"
+    ],
+    "fabric-datagen": [
+      "com.ores.fabric.datagen.DataGenerator"
     ]
   },
   "depends": {
