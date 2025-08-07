@@ -1,6 +1,8 @@
 package com.ores.registries;
 
 import com.ores.ORESMod;
+import com.ores.core.Materials;
+import com.ores.core.Variants;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.registries.Registries;
@@ -8,24 +10,57 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Rarity;
+import net.minecraft.world.level.block.Block;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ORESMod.MOD_ID, Registries.ITEM);
 
-    public static RegistrySupplier<Item> TEST_ITEM;
-    public static RegistrySupplier<Item> TEST_BLOCK;
-    public static RegistrySupplier<Item> TEST_ORE;
+    public static final Map<String, RegistrySupplier<Item>> DYNAMIC_ITEMS = new HashMap<>();
 
 
     public static void initItems() {
+        for (Materials material : Materials.values()) {
+            List<String> exclusions = material.getVanillaExclusions().excludedVariantIds();
+            for (Variants variant : Variants.values()) {
+                String itemId = variant.getFormattedId(material.getId());
 
-        TEST_ITEM = registerItem("test_item", () -> new Item(ItemsProps("test_item")));
-        TEST_BLOCK = registerItem("test_block", () -> new BlockItem(ModBlocks.TEST_BLOCK.get(), BlocksProps("test_block")));
-        TEST_ORE = registerItem("test_ore", () -> new BlockItem(ModBlocks.TEST_ORE.get(), OresProps("test_ore")));
+                if (exclusions != null && exclusions.contains(itemId)) continue;
 
+                RegistrySupplier<Block> blockSupplier = ModBlocks.DYNAMIC_BLOCKS.get(itemId);
+
+                switch (variant.getCategory()) {
+                    case ITEM:
+                        RegistrySupplier<Item> itemSupplier = registerItem(itemId, () -> new Item(applyCombinedProperties(ItemsProps(itemId), material, variant)));
+                        DYNAMIC_ITEMS.put(itemId, itemSupplier);
+                        break;
+
+                    case BLOCK:
+                    case FALLING_BLOCK:
+//                    case INVERTED_FALLING_BLOCK:
+                        if (blockSupplier != null) {
+                            RegistrySupplier<Item> blockItemSupplier = registerItem(itemId, () -> new BlockItem(blockSupplier.get(), applyCombinedProperties(BlocksProps(itemId), material, variant)));
+                            DYNAMIC_ITEMS.put(itemId, blockItemSupplier);
+                        }
+                        break;
+
+                    case ORE:
+                    case FALLING_ORE:
+//                    case INVERTED_FALLING_ORE:
+                        if (blockSupplier != null) {
+                            RegistrySupplier<Item> oreItemSupplier = registerItem(itemId, () -> new BlockItem(blockSupplier.get(), OresProps(itemId)));
+                            DYNAMIC_ITEMS.put(itemId, oreItemSupplier);
+                        }
+                        break;
+                }
+            }
+        }
 
         ITEMS.register();
     }
@@ -43,5 +78,34 @@ public class ModItems {
     }
     public static Item.Properties OresProps(String name){
         return new Item.Properties().setId(ResourceKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, name))).arch$tab(ModCreativeTab.ORES_TAB);
+    }
+
+    private static Item.Properties applyCombinedProperties(Item.Properties props, Materials material, Variants variant) {
+        Materials.ItemProps materialProps = material.getItemProps();
+        Variants.ItemProps variantProps = variant.getItemProps();
+
+        if (materialProps == null || variantProps == null) return props;
+
+        if (materialProps.maxStackSize() != null && variantProps.maxStackSize() != null) {
+            int minStack = Math.min(materialProps.maxStackSize(), variantProps.maxStackSize());
+            if (minStack != 64) {
+                props.stacksTo(minStack);
+            }
+        }
+
+        if (materialProps.rarity() != null && variantProps.rarity() != null) {
+            Rarity higherRarity = materialProps.rarity().ordinal() > variantProps.rarity().ordinal() ? materialProps.rarity() : variantProps.rarity();
+            if (higherRarity != Rarity.COMMON) {
+                props.rarity(higherRarity);
+            }
+        }
+
+        if (materialProps.isFireResistant() != null && variantProps.isFireResistant() != null) {
+            if (materialProps.isFireResistant() || variantProps.isFireResistant()) {
+                props.fireResistant();
+            }
+        }
+
+        return props;
     }
 }
