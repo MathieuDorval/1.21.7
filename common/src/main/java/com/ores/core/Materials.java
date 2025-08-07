@@ -74,7 +74,7 @@ public enum Materials {
     TIN("tin",  "ores:tin_ingot",
             new ItemProps(64, Rarity.EPIC, true, true, null, true),
             new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.RAW_IRON, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
-            null,
+            new OreProps(0.0f, 0.0f, 0, 0, false, 0, 1, 1, 1, "ores:raw_tin"),
             null
     );
 
