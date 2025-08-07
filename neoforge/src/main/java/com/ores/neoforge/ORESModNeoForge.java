@@ -1,8 +1,6 @@
 package com.ores.neoforge;
 
-import com.ores.registries.ModBlocks;
 import com.ores.registries.ModFuels;
-import com.ores.registries.ModItems;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 
@@ -17,8 +15,6 @@ public class ORESModNeoForge {
     }
 
     private void onCommonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(() -> {
-            ModFuels.registerAll();
-        });
+        event.enqueueWork(ModFuels::registerAll);
     }
 }
