@@ -20,6 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
+import static net.minecraft.data.recipes.RecipeProvider.getHasName;
+import static net.minecraft.data.recipes.RecipeProvider.getItemName;
+
 public class ModRecipeProvider extends RecipeProvider.Runner {
 
     public ModRecipeProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
@@ -39,45 +42,62 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
             @Override
             public void buildRecipes() {
                 for (Materials material : Materials.values()) {
-                    Optional<Item> baseItemOutputOpt = findItemFromIdBase(material.getIdBase());
-                    if (baseItemOutputOpt.isEmpty()) {
-                        continue;
-                    }
-                    Item baseItemOutput = baseItemOutputOpt.get();
-
                     for (Variants variant : Variants.values()) {
-                        Variants.Category category = variant.getCategory();
-                        if (category != Variants.Category.ORE &&
-                                category != Variants.Category.FALLING_ORE &&
-                                category != Variants.Category.INVERTED_FALLING_ORE)
-                        {
+                        String inputId = variant.getFormattedId(material.getId());
+                        RegistrySupplier<Item> inputSupplier = ModItems.DYNAMIC_ITEMS.get(inputId);
+
+                        if (inputSupplier == null) {
                             continue;
                         }
 
-                        String itemId = variant.getFormattedId(material.getId());
-                        RegistrySupplier<Item> itemSupplier = ModItems.DYNAMIC_ITEMS.get(itemId);
+                        var unlockCriterion = inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, inputSupplier.get()).build());
 
-                        if (itemSupplier == null) {
-                            continue;
+                        // --- LOGIQUE DE CUISSON REFACTORISÉE ---
+                        switch (variant.getCategory()) {
+                            case ORE, FALLING_ORE, INVERTED_FALLING_ORE -> {
+                                findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> {
+                                    addCookingRecipes(this.output, inputId, inputSupplier.get(), outputItem, 200, 100, unlockCriterion);
+                                });
+                            }
+                            case ITEM -> {
+                                if (variant == Variants.RAW) {
+                                    findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> {
+                                        addCookingRecipes(this.output, inputId, inputSupplier.get(), outputItem, 200, 100, unlockCriterion);
+                                    });
+                                }
+                            }
+                            case BLOCK -> {
+                                if (variant == Variants.RAW_BLOCK) {
+                                    String outputId = Variants.BLOCK.getFormattedId(material.getId());
+                                    RegistrySupplier<Item> outputSupplier = ModItems.DYNAMIC_ITEMS.get(outputId);
+                                    if (outputSupplier != null) {
+                                        addCookingRecipes(this.output, inputId, inputSupplier.get(), outputSupplier.get(), 1800, 900, unlockCriterion);
+                                    }
+                                }
+                            }
                         }
-
-                        var unlockCriterion = inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, itemSupplier.get()).build());
-
-                        String smeltingPath = getItemName(baseItemOutput) + "_from_smelting_" + itemId;
-                        String blastingPath = getItemName(baseItemOutput) + "_from_blasting_" + itemId;
-
-                        SimpleCookingRecipeBuilder.smelting(Ingredient.of(itemSupplier.get()), RecipeCategory.MISC, baseItemOutput, 0.7f, 200)
-                                .unlockedBy(getHasName(itemSupplier.get()), unlockCriterion)
-                                .save(this.output, String.valueOf(ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, smeltingPath)));
-
-                        SimpleCookingRecipeBuilder.blasting(Ingredient.of(itemSupplier.get()), RecipeCategory.MISC, baseItemOutput, 0.7f, 100)
-                                .unlockedBy(getHasName(itemSupplier.get()), unlockCriterion)
-                                .save(this.output, String.valueOf(ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, blastingPath)));
                     }
                 }
             }
         };
     }
+
+    /**
+     * Ajoute les recettes de cuisson (fourneau et haut-fourneau) pour un item donné.
+     */
+    private void addCookingRecipes(RecipeOutput exporter, String inputId, Item input, Item output, int smeltingTime, int blastingTime, net.minecraft.advancements.Criterion<?> unlockCriterion) {
+        String smeltingPath = getItemName(output) + "_from_smelting_" + inputId;
+        String blastingPath = getItemName(output) + "_from_blasting_" + inputId;
+
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(input), RecipeCategory.MISC, output, 0.7f, smeltingTime)
+                .unlockedBy(getHasName(input), unlockCriterion)
+                .save(exporter, ORESMod.MOD_ID + ":" + smeltingPath);
+
+        SimpleCookingRecipeBuilder.blasting(Ingredient.of(input), RecipeCategory.MISC, output, 0.7f, blastingTime)
+                .unlockedBy(getHasName(input), unlockCriterion)
+                .save(exporter, ORESMod.MOD_ID + ":" + blastingPath);
+    }
+
 
     private static Optional<Item> findItemFromIdBase(String idBase) {
         ResourceLocation resourceLocation = ResourceLocation.tryParse(idBase);
