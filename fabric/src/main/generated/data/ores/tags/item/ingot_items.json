@@ -1,0 +1,48 @@
+{
+  "values": [
+    {
+      "id": "ores:coal_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:copper_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:iron_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:lapis_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:gold_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:redstone_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:emerald_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:diamond_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:quartz_ingot",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:tin_ingot",
+      "required": false
+    }
+  ]
+}

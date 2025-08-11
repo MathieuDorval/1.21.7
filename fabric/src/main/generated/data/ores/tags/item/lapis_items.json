@@ -1,0 +1,32 @@
+{
+  "values": [
+    {
+      "id": "minecraft:lapis",
+      "required": false
+    },
+    {
+      "id": "ores:lapis_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:raw_lapis",
+      "required": false
+    },
+    {
+      "id": "ores:lapis_nugget",
+      "required": false
+    },
+    {
+      "id": "ores:lapis_scrap",
+      "required": false
+    },
+    {
+      "id": "minecraft:lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_lapis_block",
+      "required": false
+    }
+  ]
+}

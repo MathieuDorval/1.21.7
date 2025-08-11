@@ -11,11 +11,11 @@ import org.jetbrains.annotations.Nullable;
 public enum Variants {
     // -=-=-=- ITEMS -=-=-=-
     // === VANILLA ===
-    SELF("%s", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, true,100, true, ColorType.BASE)),
-    INGOT("%s_ingot", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, true, 100, true, ColorType.BASE)),
-    RAW("raw_%s", Category.ITEM, new ItemProps(null, null, null, false, null, false, ColorType.RAW)),
-    NUGGET("%s_nugget", Category.ITEM, new ItemProps(16, Rarity.COMMON, false, false, 12, false, ColorType.BASE)),
-    SCRAP("%s_scrap", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, false, null, false, ColorType.RAW)),
+    SELF("%s", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, true,100, true, ColorType.BASE, true, true, true)),
+    INGOT("%s_ingot", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, true, 100, true, ColorType.BASE, true, true, true)),
+    RAW("raw_%s", Category.ITEM, new ItemProps(null, null, null, false, null, false, ColorType.RAW, false, false, false)),
+    NUGGET("%s_nugget", Category.ITEM, new ItemProps(16, Rarity.COMMON, false, false, 12, false, ColorType.BASE, false, false, false)),
+    SCRAP("%s_scrap", Category.ITEM, new ItemProps(64, Rarity.COMMON, false, false, null, false, ColorType.RAW, false, false, false)),
     // -=-=-=- BLOCKS -=-=-=-
     // === VANILLA ===
     BLOCK("%s_block", Category.BLOCK, new BlockProps(5.0f, 6.0f, true, 0, null, null, null, null, null, null, 64, 0, Materials.Tools.PICKAXE, 900, true, ColorType.BASE)),
@@ -37,7 +37,7 @@ public enum Variants {
 
     public record ItemProps(
             @Nullable Integer maxStackSize, @Nullable Rarity rarity, @Nullable Boolean isFireResistant,
-            Boolean trimable, @Nullable Integer burnTime, Boolean beacon, ColorType color
+            Boolean trimable, @Nullable Integer burnTime, Boolean beacon, ColorType color, Boolean piglinRepellents, Boolean piglinLoved, Boolean piglinFood
     ) {}
 
     public record BlockProps(

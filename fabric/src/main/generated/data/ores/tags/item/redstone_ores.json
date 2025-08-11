@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_redstone_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_redstone_ore",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,32 @@
+{
+  "values": [
+    {
+      "id": "minecraft:redstone",
+      "required": false
+    },
+    {
+      "id": "ores:redstone_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:raw_redstone",
+      "required": false
+    },
+    {
+      "id": "ores:redstone_nugget",
+      "required": false
+    },
+    {
+      "id": "ores:redstone_scrap",
+      "required": false
+    },
+    {
+      "id": "minecraft:redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_redstone_block",
+      "required": false
+    }
+  ]
+}

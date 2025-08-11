@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_gold_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_gold_ore",
+      "required": false
+    }
+  ]
+}

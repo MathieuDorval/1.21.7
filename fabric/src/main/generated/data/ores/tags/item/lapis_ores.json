@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_lapis_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_lapis_ore",
+      "required": false
+    }
+  ]
+}

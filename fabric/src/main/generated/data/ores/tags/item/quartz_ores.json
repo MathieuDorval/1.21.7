@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_quartz_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_quartz_ore",
+      "required": false
+    }
+  ]
+}

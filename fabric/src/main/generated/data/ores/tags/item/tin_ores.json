@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_tin_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_tin_ore",
+      "required": false
+    }
+  ]
+}

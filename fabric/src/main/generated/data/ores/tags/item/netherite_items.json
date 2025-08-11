@@ -1,0 +1,32 @@
+{
+  "values": [
+    {
+      "id": "ores:netherite",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:raw_netherite",
+      "required": false
+    },
+    {
+      "id": "ores:netherite_nugget",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_scrap",
+      "required": false
+    },
+    {
+      "id": "minecraft:netherite_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_netherite_block",
+      "required": false
+    }
+  ]
+}

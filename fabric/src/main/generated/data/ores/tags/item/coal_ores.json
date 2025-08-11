@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_coal_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_coal_ore",
+      "required": false
+    }
+  ]
+}

@@ -1,0 +1,48 @@
+{
+  "values": [
+    {
+      "id": "ores:raw_coal_block",
+      "required": false
+    },
+    {
+      "id": "minecraft:raw_copper_block",
+      "required": false
+    },
+    {
+      "id": "minecraft:raw_iron_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_lapis_block",
+      "required": false
+    },
+    {
+      "id": "minecraft:raw_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_emerald_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_quartz_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_netherite_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_tin_block",
+      "required": false
+    }
+  ]
+}

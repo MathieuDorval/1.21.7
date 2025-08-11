@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_emerald_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_emerald_ore",
+      "required": false
+    }
+  ]
+}

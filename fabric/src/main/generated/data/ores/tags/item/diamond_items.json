@@ -1,0 +1,32 @@
+{
+  "values": [
+    {
+      "id": "minecraft:diamond",
+      "required": false
+    },
+    {
+      "id": "ores:diamond_ingot",
+      "required": false
+    },
+    {
+      "id": "ores:raw_diamond",
+      "required": false
+    },
+    {
+      "id": "ores:diamond_nugget",
+      "required": false
+    },
+    {
+      "id": "ores:diamond_scrap",
+      "required": false
+    },
+    {
+      "id": "minecraft:diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:raw_diamond_block",
+      "required": false
+    }
+  ]
+}

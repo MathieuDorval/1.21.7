@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_iron_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_iron_ore",
+      "required": false
+    }
+  ]
+}

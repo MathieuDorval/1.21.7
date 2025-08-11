@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_copper_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_copper_ore",
+      "required": false
+    }
+  ]
+}
