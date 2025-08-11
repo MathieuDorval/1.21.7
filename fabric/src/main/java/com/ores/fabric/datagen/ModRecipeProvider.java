@@ -17,11 +17,11 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-import static net.minecraft.data.recipes.RecipeProvider.getHasName;
-import static net.minecraft.data.recipes.RecipeProvider.getItemName;
+import static net.minecraft.data.recipes.RecipeProvider.*;
 
 public class ModRecipeProvider extends RecipeProvider.Runner {
 
@@ -42,49 +42,75 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
             @Override
             public void buildRecipes() {
                 for (Materials material : Materials.values()) {
+                    // --- LOGIQUE DE COMPRESSION/DÉCOMPRESSION ---
+                    // Nugget <-> Ingot/Base Item
+                    findItemFromIdBase(material.getIdBase()).ifPresent(baseItem -> {
+                        findItemForRecipe(material, Variants.NUGGET).ifPresent(nuggetItem -> {
+                            addStorageRecipes(this.output, RecipeCategory.MISC, nuggetItem, baseItem, itemHolderGetter);
+                        });
+                    });
+
+                    // Raw Item <-> Raw Block
+                    findItemForRecipe(material, Variants.RAW).ifPresent(rawItem -> {
+                        findItemForRecipe(material, Variants.RAW_BLOCK).ifPresent(rawBlockItem -> {
+                            addStorageRecipes(this.output, RecipeCategory.BUILDING_BLOCKS, rawItem, rawBlockItem, itemHolderGetter);
+                        });
+                    });
+
+                    // Base Item <-> Block
+                    findItemFromIdBase(material.getIdBase()).ifPresent(baseItem -> {
+                        findItemForRecipe(material, Variants.BLOCK).ifPresent(blockItem -> {
+                            addStorageRecipes(this.output, RecipeCategory.BUILDING_BLOCKS, baseItem, blockItem, itemHolderGetter);
+                        });
+                    });
+
+
+                    // --- LOGIQUE DE CUISSON ---
                     for (Variants variant : Variants.values()) {
                         String inputId = variant.getFormattedId(material.getId());
-                        RegistrySupplier<Item> inputSupplier = ModItems.DYNAMIC_ITEMS.get(inputId);
+                        findItemForRecipe(material, variant).ifPresent(inputItem -> {
 
-                        if (inputSupplier == null) {
-                            continue;
-                        }
+                            var unlockCriterion = inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, inputItem).build());
 
-                        var unlockCriterion = inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, inputSupplier.get()).build());
-
-                        // --- LOGIQUE DE CUISSON REFACTORISÉE ---
-                        switch (variant.getCategory()) {
-                            case ORE, FALLING_ORE, INVERTED_FALLING_ORE -> {
-                                findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> {
-                                    addCookingRecipes(this.output, inputId, inputSupplier.get(), outputItem, 200, 100, unlockCriterion);
-                                });
-                            }
-                            case ITEM -> {
-                                if (variant == Variants.RAW) {
-                                    findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> {
-                                        addCookingRecipes(this.output, inputId, inputSupplier.get(), outputItem, 200, 100, unlockCriterion);
-                                    });
+                            switch (variant.getCategory()) {
+                                case ORE, FALLING_ORE, INVERTED_FALLING_ORE -> findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> addCookingRecipes(this.output, inputId, inputItem, outputItem, 200, 100, unlockCriterion));
+                                case ITEM -> {
+                                    if (variant == Variants.RAW) {
+                                        findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> addCookingRecipes(this.output, inputId, inputItem, outputItem, 200, 100, unlockCriterion));
+                                    }
                                 }
-                            }
-                            case BLOCK -> {
-                                if (variant == Variants.RAW_BLOCK) {
-                                    String outputId = Variants.BLOCK.getFormattedId(material.getId());
-                                    RegistrySupplier<Item> outputSupplier = ModItems.DYNAMIC_ITEMS.get(outputId);
-                                    if (outputSupplier != null) {
-                                        addCookingRecipes(this.output, inputId, inputSupplier.get(), outputSupplier.get(), 1800, 900, unlockCriterion);
+                                case BLOCK -> {
+                                    if (variant == Variants.RAW_BLOCK) {
+                                        findItemForRecipe(material, Variants.BLOCK).ifPresent(outputItem -> {
+                                            addCookingRecipes(this.output, inputId, inputItem, outputItem, 1800, 900, unlockCriterion);
+                                        });
                                     }
                                 }
                             }
-                        }
+                        });
                     }
                 }
             }
         };
     }
 
-    /**
-     * Ajoute les recettes de cuisson (fourneau et haut-fourneau) pour un item donné.
-     */
+
+    private void addStorageRecipes(RecipeOutput exporter, RecipeCategory category, Item smallItem, Item largeItem, HolderGetter<Item> itemHolderGetter) {
+        ShapelessRecipeBuilder.shapeless(itemHolderGetter, category, smallItem, 9)
+                .requires(largeItem)
+                .unlockedBy(getHasName(largeItem), inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, largeItem).build()))
+                .save(exporter, ORESMod.MOD_ID + ":" + getItemName(smallItem) + "_from_" + getItemName(largeItem));
+
+        ShapedRecipeBuilder.shaped(itemHolderGetter, category, largeItem)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###")
+                .define('#', smallItem)
+                .unlockedBy(getHasName(smallItem), inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, smallItem).build()))
+                .save(exporter, ORESMod.MOD_ID + ":" + getItemName(largeItem) + "_from_" + getItemName(smallItem));
+    }
+
+
     private void addCookingRecipes(RecipeOutput exporter, String inputId, Item input, Item output, int smeltingTime, int blastingTime, net.minecraft.advancements.Criterion<?> unlockCriterion) {
         String smeltingPath = getItemName(output) + "_from_smelting_" + inputId;
         String blastingPath = getItemName(output) + "_from_blasting_" + inputId;
@@ -113,5 +139,24 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
         }
 
         return BuiltInRegistries.ITEM.getOptional(resourceLocation);
+    }
+
+    private static Optional<Item> findItemForRecipe(Materials material, Variants variant) {
+        String formattedId = variant.getFormattedId(material.getId());
+
+        RegistrySupplier<Item> modItemSupplier = ModItems.DYNAMIC_ITEMS.get(formattedId);
+        if (modItemSupplier != null) {
+            return Optional.of(modItemSupplier.get());
+        }
+
+        Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
+        if (vanillaExclusions != null) {
+            List<String> exclusions = vanillaExclusions.excludedVariantIds();
+            if (exclusions != null && exclusions.contains(formattedId)) {
+                return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
+            }
+        }
+
+        return Optional.empty();
     }
 }

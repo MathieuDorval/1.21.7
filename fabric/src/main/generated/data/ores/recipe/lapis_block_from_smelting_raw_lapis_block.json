@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:smelting",
+  "category": "blocks",
+  "cookingtime": 1800,
+  "experience": 0.7,
+  "ingredient": "ores:raw_lapis_block",
+  "result": {
+    "id": "minecraft:lapis_block"
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_diamond_nugget": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ores:diamond_nugget"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ores:diamond_from_diamond_nugget"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_diamond_nugget"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ores:diamond_from_diamond_nugget"
+    ]
+  }
+}
