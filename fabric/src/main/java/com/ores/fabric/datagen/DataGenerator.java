@@ -11,6 +11,7 @@ public class DataGenerator implements DataGeneratorEntrypoint {
 
         // Enregistrement des fournisseurs de données côté serveur (tables de butin)
         pack.addProvider(ModLootTableProvider::new);
+        pack.addProvider(ModRecipeProvider::new);
 
         // Enregistrement des fournisseurs de données côté client (modèles de blocs/objets)
         pack.addProvider(ModModelProvider::new);

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ores:quartz_from_blasting_tuff_quartz_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tuff_quartz_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ores:tuff_quartz_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_tuff_quartz_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ores:quartz_from_blasting_tuff_quartz_ore"
+    ]
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_calcite_diamond_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ores:calcite_diamond_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ores:diamond_from_smelting_calcite_diamond_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_calcite_diamond_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ores:diamond_from_smelting_calcite_diamond_ore"
+    ]
+  }
+}

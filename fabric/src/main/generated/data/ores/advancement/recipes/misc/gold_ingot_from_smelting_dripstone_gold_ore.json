@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_dripstone_gold_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ores:dripstone_gold_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ores:gold_ingot_from_smelting_dripstone_gold_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_dripstone_gold_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ores:gold_ingot_from_smelting_dripstone_gold_ore"
+    ]
+  }
+}

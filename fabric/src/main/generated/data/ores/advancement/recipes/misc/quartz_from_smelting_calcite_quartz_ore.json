@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_calcite_quartz_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "ores:calcite_quartz_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "ores:quartz_from_smelting_calcite_quartz_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_calcite_quartz_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "ores:quartz_from_smelting_calcite_quartz_ore"
+    ]
+  }
+}
