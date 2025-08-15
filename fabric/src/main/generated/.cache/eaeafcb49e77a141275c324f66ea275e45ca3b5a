@@ -1,5 +1,7 @@
 // 1.21.7	-999999999-01-01T00:00:00	Ores mod/Tags for minecraft:item
 0a82a44b37d3b8b77e6d6fa627d7d3784ba0ee98 data/minecraft/tags/item/beacon_payment_items.json
+db85c5393d9d8e1dfce1c2729c01c30bb5ec4b30 data/minecraft/tags/item/piglin_food.json
+db85c5393d9d8e1dfce1c2729c01c30bb5ec4b30 data/minecraft/tags/item/piglin_loved.json
 51c56ee5af5fc8c0758d0f93ce4d28cb160fea8c data/ores/tags/item/block_items.json
 4af8ff43032ed5b29d31cfa3a447263144f069d8 data/ores/tags/item/coal_items.json
 a48e578e968dda9af259b7ef590c4f0dbc7de721 data/ores/tags/item/coal_ores.json
