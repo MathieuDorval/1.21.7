@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * BLOCKS TAGS DATAGEN
+ */
 package com.ores.fabric.datagen;
 
 import com.ores.core.Materials;
@@ -32,11 +36,9 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
                         variant.getCategory() != Variants.Category.INVERTED_FALLING_ORE) {
                     continue;
                 }
-
                 findBlockForRecipe(material, variant).ifPresent(block -> {
                     Integer toolLevel = null;
                     Materials.Tools tool = null;
-
                     if (variant.getCategory() == Variants.Category.BLOCK && variant.getBlockProps() != null) {
                         toolLevel = variant.getBlockProps().toolLevel();
                         tool = variant.getBlockProps().tool();
@@ -45,6 +47,7 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
                         tool = variant.getOreProps().tool();
                     }
 
+                    // -=-=-=- EFFICIENT TOOLS -=-=-=-
                     if (tool != null) {
                         switch (tool) {
                             case PICKAXE -> builder(BlockTags.MINEABLE_WITH_PICKAXE).add(block.builtInRegistryHolder().key());
@@ -52,10 +55,9 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
                             case SHOVEL -> builder(BlockTags.MINEABLE_WITH_SHOVEL).add(block.builtInRegistryHolder().key());
                             case HOE -> builder(BlockTags.MINEABLE_WITH_HOE).add(block.builtInRegistryHolder().key());
                             case SWORD -> builder(BlockTags.SWORD_EFFICIENT).add(block.builtInRegistryHolder().key());
-
                         }
                     }
-
+                    // -=-=-=- TOOLS LEVELS -=-=-=-
                     if (toolLevel != null) {
                         switch (toolLevel) {
                             case 1 -> builder(BlockTags.NEEDS_STONE_TOOL).add(block.builtInRegistryHolder().key());
@@ -63,11 +65,11 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
                             case 3 -> builder(BlockTags.NEEDS_DIAMOND_TOOL).add(block.builtInRegistryHolder().key());
                         }
                     }
-
                     if (variant.getCategory() == Variants.Category.BLOCK) {
                         Materials.Tags materialTags = material.getTags();
                         Variants.BlockProps variantBlockProps = variant.getBlockProps();
 
+                        // -=-=-=- BEACON MATERIAL -=-=-=-
                         if (materialTags != null && variantBlockProps != null) {
                             if (materialTags.beacon() && variantBlockProps.beacon()) {
                                 builder(BlockTags.BEACON_BASE_BLOCKS).add(block.builtInRegistryHolder().key());
@@ -81,12 +83,8 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
 
     private static Optional<Block> findBlockForRecipe(Materials material, Variants variant) {
         String formattedId = variant.getFormattedId(material.getId());
-
         RegistrySupplier<Block> modBlockSupplier = ModBlocks.DYNAMIC_BLOCKS.get(formattedId);
-        if (modBlockSupplier != null) {
-            return Optional.of(modBlockSupplier.get());
-        }
-
+        if (modBlockSupplier != null) return Optional.of(modBlockSupplier.get());
         Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
         if (vanillaExclusions != null) {
             List<String> exclusions = vanillaExclusions.excludedVariantIds();
@@ -94,7 +92,6 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
                 return BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
             }
         }
-
         return Optional.empty();
     }
 }

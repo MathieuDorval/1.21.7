@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * MODELS DATAGEN
+ */
 package com.ores.fabric.datagen;
 
 import com.ores.registries.ModBlocks;

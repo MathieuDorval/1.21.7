@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * RECIPES DATAGEN
+ */
 package com.ores.fabric.datagen;
 
 import com.ores.ORESMod;
@@ -44,8 +48,7 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
             @Override
             public void buildRecipes() {
                 for (Materials material : Materials.values()) {
-                    // --- LOGIQUE DE COMPRESSION/DÉCOMPRESSION ---
-                    // (Code inchangé)
+                    // -=-=-=- COMPRESSION - DECOMPRESSION -=-=-=-
                     findItemFromIdBase(material.getIdBase()).ifPresent(baseItem -> {
                         findItemForRecipe(material, Variants.NUGGET).ifPresent(nuggetItem -> {
                             addStorageRecipes(this.output, RecipeCategory.MISC, nuggetItem, baseItem, itemHolderGetter);
@@ -61,22 +64,14 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
                             addStorageRecipes(this.output, RecipeCategory.BUILDING_BLOCKS, baseItem, blockItem, itemHolderGetter);
                         });
                     });
-
-                    // --- LOGIQUE DE CUISSON ---
-
-                    // MODIFICATION : Utilisation du tag pour les minerais
+                    // -=-=-=- FURNACE -=-=-=-
                     TagKey<Item> oreTag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, material.getId() + "_ores"));
                     findItemFromIdBase(material.getIdBase()).ifPresent(outputItem -> {
-                        // CORRECTION : Utilisation de la méthode 'has' pour créer le critère de déverrouillage
                         var unlockCriterion = this.has(oreTag);
-                        // CORRECTION : Création de l'ingrédient via un HolderSet pour éviter les problèmes de surcharge de méthode
                         HolderSet.Named<Item> oreTagHolderSet = itemHolderGetter.getOrThrow(oreTag);
                         Ingredient oreIngredient = Ingredient.of(oreTagHolderSet);
                         addCookingRecipesByTag(this.output, material.getId() + "_ores", oreIngredient, outputItem, 200, 100, unlockCriterion);
                     });
-
-
-                    // Logique de cuisson pour les items spécifiques (RAW, RAW_BLOCK)
                     for (Variants variant : List.of(Variants.RAW, Variants.RAW_BLOCK)) {
                         findItemForRecipe(material, variant).ifPresent(inputItem -> {
                             var unlockCriterion = inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, inputItem).build());
@@ -97,13 +92,11 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
         };
     }
 
-
     private void addStorageRecipes(RecipeOutput exporter, RecipeCategory category, Item smallItem, Item largeItem, HolderGetter<Item> itemHolderGetter) {
         ShapelessRecipeBuilder.shapeless(itemHolderGetter, category, smallItem, 9)
                 .requires(largeItem)
                 .unlockedBy(getHasName(largeItem), inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, largeItem).build()))
                 .save(exporter, ORESMod.MOD_ID + ":" + getItemName(smallItem) + "_from_" + getItemName(largeItem));
-
         ShapedRecipeBuilder.shaped(itemHolderGetter, category, largeItem)
                 .pattern("###")
                 .pattern("###")
@@ -113,59 +106,42 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
                 .save(exporter, ORESMod.MOD_ID + ":" + getItemName(largeItem) + "_from_" + getItemName(smallItem));
     }
 
-    // Recettes pour des items uniques
     private void addCookingRecipes(RecipeOutput exporter, String inputId, Item input, Item output, int smeltingTime, int blastingTime, net.minecraft.advancements.Criterion<?> unlockCriterion) {
         String smeltingPath = getItemName(output) + "_from_smelting_" + inputId;
         String blastingPath = getItemName(output) + "_from_blasting_" + inputId;
-
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(input), RecipeCategory.MISC, output, 0.7f, smeltingTime)
                 .unlockedBy(getHasName(input), unlockCriterion)
                 .save(exporter, ORESMod.MOD_ID + ":" + smeltingPath);
-
         SimpleCookingRecipeBuilder.blasting(Ingredient.of(input), RecipeCategory.MISC, output, 0.7f, blastingTime)
                 .unlockedBy(getHasName(input), unlockCriterion)
                 .save(exporter, ORESMod.MOD_ID + ":" + blastingPath);
     }
 
-    // Nouvelle méthode pour les recettes basées sur des tags
     private void addCookingRecipesByTag(RecipeOutput exporter, String inputId, Ingredient input, Item output, int smeltingTime, int blastingTime, net.minecraft.advancements.Criterion<?> unlockCriterion) {
         String smeltingPath = getItemName(output) + "_from_smelting_" + inputId;
         String blastingPath = getItemName(output) + "_from_blasting_" + inputId;
-
         SimpleCookingRecipeBuilder.smelting(input, RecipeCategory.MISC, output, 0.7f, smeltingTime)
                 .unlockedBy("has_" + inputId, unlockCriterion)
                 .save(exporter, ORESMod.MOD_ID + ":" + smeltingPath);
-
         SimpleCookingRecipeBuilder.blasting(input, RecipeCategory.MISC, output, 0.7f, blastingTime)
                 .unlockedBy("has_" + inputId, unlockCriterion)
                 .save(exporter, ORESMod.MOD_ID + ":" + blastingPath);
     }
 
-
     private static Optional<Item> findItemFromIdBase(String idBase) {
         ResourceLocation resourceLocation = ResourceLocation.tryParse(idBase);
-        if (resourceLocation == null) {
-            return Optional.empty();
-        }
-
+        if (resourceLocation == null) return Optional.empty();
         if (resourceLocation.getNamespace().equals(ORESMod.MOD_ID)) {
             RegistrySupplier<Item> modItem = ModItems.DYNAMIC_ITEMS.get(resourceLocation.getPath());
-            if (modItem != null) {
-                return Optional.of(modItem.get());
-            }
+            if (modItem != null) return Optional.of(modItem.get());
         }
-
         return BuiltInRegistries.ITEM.getOptional(resourceLocation);
     }
 
     private static Optional<Item> findItemForRecipe(Materials material, Variants variant) {
         String formattedId = variant.getFormattedId(material.getId());
-
         RegistrySupplier<Item> modItemSupplier = ModItems.DYNAMIC_ITEMS.get(formattedId);
-        if (modItemSupplier != null) {
-            return Optional.of(modItemSupplier.get());
-        }
-
+        if (modItemSupplier != null) return Optional.of(modItemSupplier.get());
         Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
         if (vanillaExclusions != null) {
             List<String> exclusions = vanillaExclusions.excludedVariantIds();
@@ -173,7 +149,6 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
                 return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
             }
         }
-
         return Optional.empty();
     }
 }

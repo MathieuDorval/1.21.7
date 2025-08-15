@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * BLOCKS LOOT TABLE DATAGEN
+ */
 package com.ores.fabric.datagen;
 
 import com.ores.core.Materials;

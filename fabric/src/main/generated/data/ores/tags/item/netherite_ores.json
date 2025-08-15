@@ -1,0 +1,36 @@
+{
+  "values": [
+    {
+      "id": "ores:netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:deepslate_netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:granite_netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:diorite_netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:andesite_netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:tuff_netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:calcite_netherite_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dripstone_netherite_ore",
+      "required": false
+    }
+  ]
+}

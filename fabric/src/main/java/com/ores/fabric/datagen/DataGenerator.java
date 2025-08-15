@@ -8,14 +8,10 @@ public class DataGenerator implements DataGeneratorEntrypoint {
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-
         pack.addProvider(ModLootTableProvider::new);
         pack.addProvider(ModRecipeProvider::new);
-
         pack.addProvider(ModModelProvider::new);
-
         pack.addProvider(ModBlockTagProvider::new);
         pack.addProvider(ModItemTagProvider::new);
-
     }
 }
