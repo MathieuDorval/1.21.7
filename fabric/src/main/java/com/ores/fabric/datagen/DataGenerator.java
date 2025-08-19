@@ -13,6 +13,7 @@ public class DataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(ModModelProvider::new);
         pack.addProvider(ModBlockTagProvider::new);
         pack.addProvider(ModItemTagProvider::new);
+        pack.addProvider(ModWorldGenProvider::new);
         pack.addProvider(TexturesGenerator::new);
     }
 }

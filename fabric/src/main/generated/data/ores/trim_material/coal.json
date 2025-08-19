@@ -1,0 +1,7 @@
+{
+  "asset_name": "coal",
+  "description": {
+    "color": "#333333",
+    "translate": "trim_material.ores.coal"
+  }
+}
