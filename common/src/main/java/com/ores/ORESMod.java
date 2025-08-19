@@ -1,6 +1,7 @@
 package com.ores;
 
 import com.ores.config.ModConfig;
+import com.ores.event.WorldGenerationEvents;
 import com.ores.registries.ModBlocks;
 import com.ores.registries.ModCreativeTab;
 import com.ores.registries.ModItems;
@@ -13,5 +14,6 @@ public final class ORESMod {
         ModCreativeTab.initTabs();
         ModBlocks.initBlocks();
         ModItems.initItems();
+        WorldGenerationEvents.init();
     }
 }
