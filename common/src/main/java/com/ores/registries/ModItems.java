@@ -5,35 +5,26 @@ import com.ores.core.Materials;
 import com.ores.core.Variants;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.RegistrySupplier;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
-import net.minecraft.world.item.component.ProvidesTrimMaterial;
 import net.minecraft.world.item.equipment.trim.TrimMaterial;
+import net.minecraft.world.item.equipment.trim.TrimMaterials;
 import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ORESMod.MOD_ID, Registries.ITEM);
 
     public static final Map<String, RegistrySupplier<Item>> DYNAMIC_ITEMS = new HashMap<>();
-
-    private static final Set<String> VANILLA_TRIM_MATERIALS = Stream.of(
-            "quartz", "iron", "netherite", "redstone", "copper",
-            "gold", "emerald", "diamond", "lapis"
-    ).collect(Collectors.toSet());
 
     public static void initItems() {
         for (Materials material : Materials.values()) {
@@ -120,16 +111,17 @@ public class ModItems {
                 props.fireResistant();
             }
         }
-
         // --- Trim Material ---
         if (variantProps.trimable() && materialProps.trimColor() != null) {
-            String namespace = VANILLA_TRIM_MATERIALS.contains(material.getId()) ? "minecraft" : ORESMod.MOD_ID;
+            ResourceLocation baseIdLocation = ResourceLocation.parse(material.getIdBase());
+            String namespace = baseIdLocation.getNamespace();
 
             ResourceLocation trimLocation = ResourceLocation.fromNamespaceAndPath(namespace, material.getId());
             ResourceKey<TrimMaterial> materialKey = ResourceKey.create(Registries.TRIM_MATERIAL, trimLocation);
 
-            props.component(DataComponents.PROVIDES_TRIM_MATERIAL, new ProvidesTrimMaterial(materialKey));
+            props.trimMaterial(materialKey);
         }
+
         return props;
     }
 }

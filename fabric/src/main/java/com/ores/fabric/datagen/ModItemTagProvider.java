@@ -67,6 +67,10 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
                         if (materialTags.piglinFood() && variantProps.piglinFood()) {
                             builder(ItemTags.PIGLIN_FOOD).add(item.builtInRegistryHolder().key());
                         }
+                        // -=-=-=- TRIM MATERIALS -=-=-=-
+                        if (materialTags.trimMaterial() && variantProps.trimable() != null) {
+                            builder(ItemTags.TRIM_MATERIALS).add(item.builtInRegistryHolder().key());
+                        }
                     }
                 });
             }
