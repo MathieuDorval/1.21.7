@@ -1,0 +1,7 @@
+{
+  "generate": [
+    "diamond_ingot",
+    "raw_diamond",
+    "raw_diamond_block"
+  ]
+}

@@ -30,9 +30,12 @@ public class ModBlocks {
             Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
 
             for (Variants variant : Variants.values()) {
+                if (!ModConfig.isVariantEnabled(material, variant)) {
+                    continue;
+                }
+
                 String blockId = variant.getFormattedId(material.getId());
 
-                // Applique les exclusions uniquement si l'objet n'est pas nul
                 if (vanillaExclusions != null) {
                     List<String> exclusions = vanillaExclusions.excludedVariantIds();
                     if (exclusions != null && exclusions.contains(blockId)) {

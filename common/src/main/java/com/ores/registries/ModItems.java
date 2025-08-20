@@ -1,6 +1,7 @@
 package com.ores.registries;
 
 import com.ores.ORESMod;
+import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import dev.architectury.registry.registries.DeferredRegister;
@@ -12,7 +13,6 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Rarity;
 import net.minecraft.world.item.equipment.trim.TrimMaterial;
-import net.minecraft.world.item.equipment.trim.TrimMaterials;
 import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
@@ -30,6 +30,10 @@ public class ModItems {
         for (Materials material : Materials.values()) {
             List<String> exclusions = material.getVanillaExclusions() != null ? material.getVanillaExclusions().excludedVariantIds() : null;
             for (Variants variant : Variants.values()) {
+                if (!ModConfig.isVariantEnabled(material, variant)) {
+                    continue;
+                }
+
                 String itemId = variant.getFormattedId(material.getId());
 
                 if (exclusions != null && exclusions.contains(itemId)) continue;
