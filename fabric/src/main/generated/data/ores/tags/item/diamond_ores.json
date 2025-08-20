@@ -31,6 +31,122 @@
     {
       "id": "ores:dripstone_diamond_ore",
       "required": false
+    },
+    {
+      "id": "ores:netherrack_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:basalt_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:smooth_basalt_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:dirt_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:soul_sand_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:soul_soil_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:sculk_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:gravel_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:sand_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:red_sand_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:sandstone_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:red_sandstone_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:white_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:orange_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:magenta_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:light_blue_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:yellow_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:lime_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:pink_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:gray_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:light_gray_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:cyan_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:purple_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:blue_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:brown_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:green_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:red_terracotta_diamond_ore",
+      "required": false
+    },
+    {
+      "id": "ores:black_terracotta_diamond_ore",
+      "required": false
     }
   ]
 }

@@ -1,3 +1,5 @@
 // 1.21.7	-999999999-01-01T00:00:00	Ores mod/Tags for minecraft:block
 045444a2ea2528bf04554048b883ca9f0b07ee68 data/minecraft/tags/block/beacon_base_blocks.json
-c5ef4683657c6ca1423cab20f1cc9e36d1940487 data/minecraft/tags/block/mineable/pickaxe.json
+97fb8823fab0e140092e1d017642ee6308067517 data/minecraft/tags/block/mineable/hoe.json
+616ce4677902aa40a0622340831774c2ba1676ab data/minecraft/tags/block/mineable/pickaxe.json
+a3ebbbf9c177b79f6f02871f8854b8b1e8b321bd data/minecraft/tags/block/mineable/shovel.json
