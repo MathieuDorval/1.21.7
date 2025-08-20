@@ -16,7 +16,6 @@ import net.minecraft.world.item.equipment.trim.TrimMaterial;
 import net.minecraft.world.level.block.Block;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -28,16 +27,11 @@ public class ModItems {
 
     public static void initItems() {
         for (Materials material : Materials.values()) {
-            List<String> exclusions = material.getVanillaExclusions() != null ? material.getVanillaExclusions().excludedVariantIds() : null;
             for (Variants variant : Variants.values()) {
                 if (!ModConfig.isVariantEnabled(material, variant)) {
                     continue;
                 }
-
                 String itemId = variant.getFormattedId(material.getId());
-
-                if (exclusions != null && exclusions.contains(itemId)) continue;
-
                 RegistrySupplier<Block> blockSupplier = ModBlocks.DYNAMIC_BLOCKS.get(itemId);
 
                 switch (variant.getCategory()) {

@@ -27,21 +27,11 @@ public class ModBlocks {
 
     public static void initBlocks(){
         for (Materials material : Materials.values()) {
-            Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
-
             for (Variants variant : Variants.values()) {
                 if (!ModConfig.isVariantEnabled(material, variant)) {
                     continue;
                 }
-
                 String blockId = variant.getFormattedId(material.getId());
-
-                if (vanillaExclusions != null) {
-                    List<String> exclusions = vanillaExclusions.excludedVariantIds();
-                    if (exclusions != null && exclusions.contains(blockId)) {
-                        continue;
-                    }
-                }
 
                 Materials.BlockProps materialBlockProps = material.getBlockProps();
                 Variants.BlockProps variantBlockProps = variant.getBlockProps();
