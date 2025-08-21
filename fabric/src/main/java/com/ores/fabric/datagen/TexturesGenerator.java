@@ -3,6 +3,7 @@ package com.ores.fabric.datagen;
 import com.google.common.hash.HashCode;
 import com.google.common.hash.Hashing;
 import com.ores.ORESMod;
+import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -57,16 +58,9 @@ public class TexturesGenerator implements DataProvider {
     }
 
     private void generateTexture(Materials material, Variants variant, CachedOutput cachedOutput) throws IOException {
+        if (!ModConfig.isVariantEnabled(material, variant)) return;
+
         String formattedId = variant.getFormattedId(material.getId());
-
-        Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
-        if (vanillaExclusions != null) {
-            List<String> exclusions = vanillaExclusions.excludedVariantIds();
-            if (exclusions != null && exclusions.contains(formattedId)) {
-                return;
-            }
-        }
-
         String fileName = formattedId + ".png";
         boolean isBlockTexture = switch (variant.getCategory()) {
             case BLOCK, FALLING_BLOCK, INVERTED_FALLING_BLOCK, GLASS, ORE, FALLING_ORE, INVERTED_FALLING_ORE -> true;

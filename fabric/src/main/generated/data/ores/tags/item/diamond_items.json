@@ -21,11 +21,63 @@
       "required": false
     },
     {
+      "id": "ores:dust_diamond",
+      "required": false
+    },
+    {
+      "id": "ores:dirty_dust_diamond",
+      "required": false
+    },
+    {
+      "id": "ores:clump_diamond",
+      "required": false
+    },
+    {
+      "id": "ores:shard_diamond",
+      "required": false
+    },
+    {
+      "id": "ores:crystal_diamond",
+      "required": false
+    },
+    {
       "id": "minecraft:diamond_block",
       "required": false
     },
     {
       "id": "ores:raw_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:triple_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:quadruple_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:quintuple_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:sextuple_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:septuple_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:octuple_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:nonuple_compressed_diamond_block",
       "required": false
     }
   ]

@@ -4,6 +4,7 @@
  */
 package com.ores.fabric.datagen;
 
+import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import com.ores.registries.ModBlocks;
@@ -41,7 +42,6 @@ public class ModLootTableProvider extends FabricBlockLootTableProvider {
             for (Materials material : Materials.values()) {
                 for (Variants variant : Variants.values()) {
                     String combinedId = variant.getFormattedId(material.getId());
-
                     if (combinedId.equals(blockId)) {
                         Variants.Category category = variant.getCategory();
                         switch (category) {

@@ -31,10 +31,11 @@ public class ModGeneratedConfig {
      * This replaces the dynamic list from the Materials enum.
      */
     public static final List<String> VANILLA_EXCLUSIONS = List.of(
-            "coal", "raw_iron", "raw_copper", "raw_gold", "diamond", "emerald", "lapis_lazuli", "netherite_scrap", "quartz",
+            "coal", "raw_iron", "raw_copper", "raw_gold", "diamond", "emerald", "lapis", "lapis_lazuli", "netherite_scrap", "quartz",
             "iron_ingot", "gold_ingot", "copper_ingot", "netherite_ingot",
             "iron_nugget", "gold_nugget",
-            "coal_block", "raw_iron_block", "raw_copper_block", "raw_gold_block", "iron_block", "gold_block", "copper_block", "diamond_block", "emerald_block", "lapis_block", "netherite_block", "quartz_block"
+            "raw_iron_block", "raw_copper_block", "raw_gold_block",
+            "coal_block", "iron_block", "gold_block", "copper_block", "diamond_block", "emerald_block", "lapis_block", "netherite_block", "quartz_block"
     );
     private static final Set<String> VALID_IDS = new HashSet<>();
 

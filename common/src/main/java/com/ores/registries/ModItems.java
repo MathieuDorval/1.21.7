@@ -28,9 +28,8 @@ public class ModItems {
     public static void initItems() {
         for (Materials material : Materials.values()) {
             for (Variants variant : Variants.values()) {
-                if (!ModConfig.isVariantEnabled(material, variant)) {
-                    continue;
-                }
+                if (!ModConfig.isVariantEnabled(material, variant)) continue;
+
                 String itemId = variant.getFormattedId(material.getId());
                 RegistrySupplier<Block> blockSupplier = ModBlocks.DYNAMIC_BLOCKS.get(itemId);
 

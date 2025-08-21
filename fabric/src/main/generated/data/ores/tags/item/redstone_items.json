@@ -1,7 +1,7 @@
 {
   "values": [
     {
-      "id": "minecraft:redstone",
+      "id": "ores:redstone",
       "required": false
     },
     {
@@ -21,11 +21,63 @@
       "required": false
     },
     {
-      "id": "minecraft:redstone_block",
+      "id": "ores:dust_redstone",
+      "required": false
+    },
+    {
+      "id": "ores:dirty_dust_redstone",
+      "required": false
+    },
+    {
+      "id": "ores:clump_redstone",
+      "required": false
+    },
+    {
+      "id": "ores:shard_redstone",
+      "required": false
+    },
+    {
+      "id": "ores:crystal_redstone",
+      "required": false
+    },
+    {
+      "id": "ores:redstone_block",
       "required": false
     },
     {
       "id": "ores:raw_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:triple_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:quadruple_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:quintuple_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:sextuple_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:septuple_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:octuple_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:nonuple_compressed_redstone_block",
       "required": false
     }
   ]

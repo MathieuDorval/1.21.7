@@ -21,7 +21,7 @@
       "required": false
     },
     {
-      "id": "minecraft:redstone",
+      "id": "ores:redstone",
       "required": false
     },
     {

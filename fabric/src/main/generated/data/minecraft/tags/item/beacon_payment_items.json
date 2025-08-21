@@ -1,16 +1,10 @@
 {
   "values": [
-    "ores:iron",
     "minecraft:iron_ingot",
-    "ores:gold",
     "minecraft:gold_ingot",
     "minecraft:emerald",
-    "ores:emerald_ingot",
     "minecraft:diamond",
     "ores:diamond_ingot",
-    "ores:netherite",
-    "minecraft:netherite_ingot",
-    "ores:tin",
-    "ores:tin_ingot"
+    "minecraft:netherite_ingot"
   ]
 }

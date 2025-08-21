@@ -5,6 +5,8 @@
 package com.ores.fabric.datagen;
 
 import com.ores.ORESMod;
+import com.ores.config.ModConfig;
+import com.ores.config.ModGeneratedConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import com.ores.registries.ModItems;
@@ -37,7 +39,7 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
 
             for (Variants variant : Variants.values()) {
                 String formattedId = variant.getFormattedId(material.getId());
-                ResourceLocation itemLocation = getItemLocation(material, formattedId);
+                ResourceLocation itemLocation = getItemLocation(formattedId);
                 Variants.Category category = variant.getCategory();
                 if (category == Variants.Category.ORE || category == Variants.Category.FALLING_ORE || category == Variants.Category.INVERTED_FALLING_ORE) {
                     builder(materialOresTag).addOptional(ResourceKey.create(Registries.ITEM, itemLocation));
@@ -77,13 +79,9 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
         }
     }
 
-    private static ResourceLocation getItemLocation(Materials material, String formattedId) {
-        Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
-        if (vanillaExclusions != null) {
-            List<String> exclusions = vanillaExclusions.excludedVariantIds();
-            if (exclusions != null && exclusions.contains(formattedId)) {
-                return ResourceLocation.fromNamespaceAndPath("minecraft", formattedId);
-            }
+    private static ResourceLocation getItemLocation(String formattedId) {
+        if (ModGeneratedConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
+            return ResourceLocation.fromNamespaceAndPath("minecraft", formattedId);
         }
         return ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, formattedId);
     }
@@ -91,15 +89,9 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
     private static Optional<Item> findItemForRecipe(Materials material, Variants variant) {
         String formattedId = variant.getFormattedId(material.getId());
         RegistrySupplier<Item> modItemSupplier = ModItems.DYNAMIC_ITEMS.get(formattedId);
-        if (modItemSupplier != null) {
-            return Optional.of(modItemSupplier.get());
-        }
-        Materials.VanillaExclusions vanillaExclusions = material.getVanillaExclusions();
-        if (vanillaExclusions != null) {
-            List<String> exclusions = vanillaExclusions.excludedVariantIds();
-            if (exclusions != null && exclusions.contains(formattedId)) {
-                return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
-            }
+        if (modItemSupplier != null) return Optional.of(modItemSupplier.get());
+        if (ModGeneratedConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
+            return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
         }
         return Optional.empty();
     }

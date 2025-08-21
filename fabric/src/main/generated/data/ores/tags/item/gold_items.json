@@ -21,11 +21,63 @@
       "required": false
     },
     {
+      "id": "ores:dust_gold",
+      "required": false
+    },
+    {
+      "id": "ores:dirty_dust_gold",
+      "required": false
+    },
+    {
+      "id": "ores:clump_gold",
+      "required": false
+    },
+    {
+      "id": "ores:shard_gold",
+      "required": false
+    },
+    {
+      "id": "ores:crystal_gold",
+      "required": false
+    },
+    {
       "id": "minecraft:gold_block",
       "required": false
     },
     {
       "id": "minecraft:raw_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:triple_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:quadruple_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:quintuple_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:sextuple_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:septuple_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:octuple_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:nonuple_compressed_gold_block",
       "required": false
     }
   ]

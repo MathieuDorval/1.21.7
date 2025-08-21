@@ -16,7 +16,6 @@ import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 
@@ -28,11 +27,9 @@ public class ModBlocks {
     public static void initBlocks(){
         for (Materials material : Materials.values()) {
             for (Variants variant : Variants.values()) {
-                if (!ModConfig.isVariantEnabled(material, variant)) {
-                    continue;
-                }
-                String blockId = variant.getFormattedId(material.getId());
+                if (!ModConfig.isVariantEnabled(material, variant)) continue;
 
+                String blockId = variant.getFormattedId(material.getId());
                 Materials.BlockProps materialBlockProps = material.getBlockProps();
                 Variants.BlockProps variantBlockProps = variant.getBlockProps();
                 Materials.OreProps materialOreProps = material.getOreProps();

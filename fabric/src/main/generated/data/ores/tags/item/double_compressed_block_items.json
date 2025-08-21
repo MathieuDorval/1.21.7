@@ -1,0 +1,48 @@
+{
+  "values": [
+    {
+      "id": "ores:double_compressed_coal_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_copper_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_iron_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_gold_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_redstone_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_emerald_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_diamond_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_quartz_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_netherite_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_tin_block",
+      "required": false
+    }
+  ]
+}

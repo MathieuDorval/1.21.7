@@ -15,78 +15,67 @@ public enum Materials {
             new ItemProps(64, Rarity.COMMON, false, null, 1600),
             new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.TERRACOTTA_BLACK, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 0, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 0, 2, false, 0, 0, 1, 1, "minecraft:coal"),
-            new Tags(false, false, false, false, false),
-            new VanillaExclusions(List.of("coal","coal_block"))
+            new Tags(false, false, false, false, false)
     ),
     COPPER("copper", "minecraft:copper_ingot",
             new ItemProps(64, Rarity.COMMON, false, 11823181, null),
             new BlockProps(0.0f, 0.0f, SoundType.COPPER, MapColor.COLOR_ORANGE, NoteBlockInstrument.BIT, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 0, 0, false, 0, 1, 2, 5, "minecraft:raw_copper"),
-            new Tags(false, false, false, false, true),
-            new VanillaExclusions(List.of("copper_ingot", "raw_copper", "copper_block", "raw_copper_block"))
+            new Tags(false, false, false, false, true)
     ),
     IRON("iron", "minecraft:iron_ingot",
             new ItemProps(64, Rarity.COMMON, false, 15527148, null),
             new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.METAL, NoteBlockInstrument.IRON_XYLOPHONE, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 0, 0, false, 0, 1, 1, 1, "minecraft:raw_iron"),
-            new Tags(true, false, false, false, true),
-            new VanillaExclusions(List.of("iron_ingot", "iron_nugget", "raw_iron", "iron_block", "raw_iron_block"))
+            new Tags(true, false, false, false, true)
     ),
     LAPIS("lapis", "minecraft:lapis_lazuli",
             new ItemProps(64, Rarity.COMMON, null, 4288151, null),
             new BlockProps(0.0f, 0.0f, SoundType.STONE, MapColor.LAPIS, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 2, 5, false, 0, 1, 4, 9, "minecraft:lapis_lazuli"),
-            new Tags(false, false, false, false, true),
-            new VanillaExclusions(List.of("lapis", "lapis_block"))
+            new Tags(false, false, false, false, true)
     ),
     GOLD("gold", "minecraft:gold_ingot",
             new ItemProps(64, Rarity.COMMON, false, 14594349, null),
             new BlockProps(0.5f, 0.0f, SoundType.METAL, MapColor.GOLD, NoteBlockInstrument.BELL, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 2, Tools.PICKAXE),
             new OreProps(0.5f, 0.0f, 0, 0, false, 0, 2, 1, 1, "minecraft:raw_gold"),
-            new Tags(true, false, true, true, true),
-            new VanillaExclusions(List.of("gold_ingot", "gold_nugget", "raw_gold", "gold_block", "raw_gold_block"))
+            new Tags(true, false, true, true, true)
     ),
     REDSTONE("redstone", "minecraft:redstone",
             new ItemProps(64, Rarity.COMMON, false, 9901575, null),
             new BlockProps(0.0f, 0.0f, SoundType.STONE, MapColor.COLOR_RED, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 15, null, 2, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 1, 5, true, 0, 2, 4, 5, "minecraft:redstone"),
-            new Tags(false, false, false, false, true),
-            new VanillaExclusions(List.of("redstone", "redstone_block"))
+            new Tags(false, false, false, false, true)
     ),
     EMERALD("emerald", "minecraft:emerald",
             new ItemProps(64, Rarity.RARE, false, 1155126, null),
             new BlockProps(1.0f, 0.0f, SoundType.STONE, MapColor.EMERALD, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 2, Tools.PICKAXE),
             new OreProps(1.0f, 0.0f, 3, 7, false, 0, 2, 1, 1, "minecraft:emerald"),
-            new Tags(true, false, false, false, true),
-            new VanillaExclusions(List.of("emerald", "emerald_block"))
+            new Tags(true, false, false, false, true)
     ),
     DIAMOND("diamond",  "minecraft:diamond",
             new ItemProps(64, Rarity.RARE, false, 7269586, null),
             new BlockProps(1.0f, 0.0f, SoundType.STONE, MapColor.DIAMOND, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 2, Tools.PICKAXE),
             new OreProps(1.0f, 0.0f, 3, 7, false, 0, 2, 1, 1, "minecraft:diamond"),
-            new Tags(true, false, false, false, true),
-            new VanillaExclusions(List.of("diamond", "diamond_block"))
+            new Tags(true, false, false, false, true)
     ),
     QUARTZ("quartz",  "minecraft:quartz",
             new ItemProps(64, Rarity.COMMON, false, 14931140, null),
             new BlockProps(0.0f, 0.0f, SoundType.STONE, MapColor.QUARTZ, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 2, 5, false, 0, 0, 1, 1, "minecraft:quartz"),
-            new Tags(false, false, false, false, true),
-            new VanillaExclusions(List.of("quartz", "quartz_block"))
+            new Tags(false, false, false, false, true)
     ),
     NETHERITE("netherite",  "minecraft:netherite_ingot",
             new ItemProps(64, Rarity.EPIC, true, 6445145, null),
             new BlockProps(50.0f, 1200.0f, SoundType.NETHERITE_BLOCK, MapColor.COLOR_BLACK, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 3, Tools.PICKAXE),
             null,
-            new Tags(true, false, false, false, true),
-            new VanillaExclusions(List.of("netherite_ingot", "netherite_block", "netherite_scrap"))
+            new Tags(true, false, false, false, true)
     ),
     TIN("tin",  "ores:tin_ingot",
             new ItemProps(64, Rarity.EPIC, true, 12895428, null),
             new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.RAW_IRON, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 0, 0, false, 0, 1, 1, 1, "ores:raw_tin"),
-            new Tags(true, false, false, false, true),
-            null
+            new Tags(true, false, false, false, true)
     );
 
     // --- Enums Internes ---
@@ -115,9 +104,6 @@ public enum Materials {
             Boolean beacon, Boolean piglinRepellents, Boolean piglinLoved, Boolean piglinFood, Boolean trimMaterial
     ) {}
 
-    public record VanillaExclusions(
-            @Nullable List<String> excludedVariantIds
-    ) {}
 
     private final String id;
     private final String idBase;
@@ -125,16 +111,14 @@ public enum Materials {
     private final BlockProps blockProps;
     private final OreProps oreProps;
     private final Tags tags;
-    private final VanillaExclusions vanillaExclusions;
 
-    Materials(String id, String idBase, ItemProps itemProps, BlockProps blockProps, OreProps oreProps, Tags tags, VanillaExclusions vanillaExclusions) {
+    Materials(String id, String idBase, ItemProps itemProps, BlockProps blockProps, OreProps oreProps, Tags tags) {
         this.id = id;
         this.idBase = idBase;
         this.itemProps = itemProps;
         this.blockProps = blockProps;
         this.oreProps = oreProps;
         this.tags = tags;
-        this.vanillaExclusions = vanillaExclusions;
     }
 
     public String getId() { return id; }
@@ -143,5 +127,4 @@ public enum Materials {
     public BlockProps getBlockProps() { return blockProps; }
     public OreProps getOreProps() { return oreProps; }
     public Tags getTags() { return tags; }
-    public VanillaExclusions getVanillaExclusions() { return vanillaExclusions; }
 }

@@ -21,11 +21,63 @@
       "required": false
     },
     {
+      "id": "ores:dust_lapis",
+      "required": false
+    },
+    {
+      "id": "ores:dirty_dust_lapis",
+      "required": false
+    },
+    {
+      "id": "ores:clump_lapis",
+      "required": false
+    },
+    {
+      "id": "ores:shard_lapis",
+      "required": false
+    },
+    {
+      "id": "ores:crystal_lapis",
+      "required": false
+    },
+    {
       "id": "minecraft:lapis_block",
       "required": false
     },
     {
       "id": "ores:raw_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:double_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:triple_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:quadruple_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:quintuple_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:sextuple_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:septuple_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:octuple_compressed_lapis_block",
+      "required": false
+    },
+    {
+      "id": "ores:nonuple_compressed_lapis_block",
       "required": false
     }
   ]
