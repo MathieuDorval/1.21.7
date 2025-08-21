@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * Entry point for the mod's data generation process.
+ */
 package com.ores.fabric.datagen;
 
 import net.fabricmc.fabric.api.datagen.v1.DataGeneratorEntrypoint;
@@ -5,6 +9,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataGenerator;
 
 public class DataGenerator implements DataGeneratorEntrypoint {
 
+    // -=-=-=- DATAGEN INITIALIZATION -=-=-=-
     @Override
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator) {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();

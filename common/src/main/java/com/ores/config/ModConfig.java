@@ -1,8 +1,13 @@
+/**
+ * ORES MOD | __mathieu
+ * Handles loading and accessing all mod configurations from datapacks and user files.
+ */
 package com.ores.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.ores.ORESMod;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 
@@ -18,45 +23,42 @@ import java.util.*;
 
 public class ModConfig {
 
-    // --- Propriétés de ModGeneratedConfig ---
+    // -=-=-=- CONSTANTS -=-=-=-
     public static final List<String> TO_GENERATE = new ArrayList<>();
     public static final List<String> VANILLA_EXCLUSIONS = List.of(
             "coal", "raw_iron", "raw_copper", "raw_gold", "diamond", "emerald", "lapis", "lapis_lazuli", "netherite_scrap", "quartz",
             "iron_ingot", "gold_ingot", "copper_ingot", "netherite_ingot",
             "iron_nugget", "gold_nugget",
             "raw_iron_block", "raw_copper_block", "raw_gold_block",
-            "coal_block", "iron_block", "gold_block", "copper_block", "diamond_block", "emerald_block", "lapis_block", "netherite_block", "quartz_block"
+            "coal_block", "iron_block", "gold_block", "copper_block", "diamond_block", "emerald_block", "lapis_block", "netherite_block", "quartz_block", "redstone_block"
     );
     private static final Set<String> VALID_IDS = new HashSet<>();
-
-    // --- Propriétés de ModConfig ---
     private static final Path CONFIG_PATH = Paths.get("config", "ores_config.toml");
-    private static final Map<String, Boolean> specificVariantSettings = new HashMap<>();
-    private static final Map<String, Boolean> materialSettings = new HashMap<>();
-    private static final Map<String, Boolean> oreGenerationSettings = new HashMap<>();
-    private static boolean debugMode = false;
 
-    /**
-     * Méthode d'initialisation principale qui charge toutes les configurations.
-     */
-    public static void init() {
-        // Étape 1 : Charger la configuration des datapacks (.json)
-        loadGeneratedConfig();
-        // Étape 2 : Charger la configuration de l'utilisateur (.toml)
+    // -=-=-=- CONFIG SETTINGS -=-=-=-
+    private static final Map<String, Boolean> SPECIFIC_VARIANT_SETTINGS = new HashMap<>();
+    private static final Map<String, Boolean> MATERIAL_SETTINGS = new HashMap<>();
+    private static final Map<String, Boolean> ORE_GENERATION_SETTINGS = new HashMap<>();
+    private static boolean DEBUG_MODE = false;
+
+    // -=-=-=- INITIALIZATION -=-=-=-
+    public static void initialize() {
+        loadDatapackConfig();
         loadUserConfig();
     }
 
-    private static void loadGeneratedConfig() {
+    private static void loadDatapackConfig() {
         populateValidIds();
-        String path = "data/ores/generated.json";
-        System.out.println("Scanning all mods for generated config files at: " + path);
+        String configPath = "data/ores/generated.json";
+        ORESMod.LOGGER.info("Scanning for datapack config files at: {}", configPath);
 
         try {
-            Enumeration<URL> resources = ModConfig.class.getClassLoader().getResources(path);
+            Enumeration<URL> resources = ModConfig.class.getClassLoader().getResources(configPath);
             if (!resources.hasMoreElements()) {
-                System.out.println("No 'data/ores/generated.json' files found in any loaded mods.");
+                ORESMod.LOGGER.warn("No '{}' files found in any loaded mods.", configPath);
                 return;
             }
+
             for (URL url : Collections.list(resources)) {
                 try (InputStream inputStream = url.openStream()) {
                     JsonObject jsonObject = JsonParser.parseReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8)).getAsJsonObject();
@@ -70,12 +72,12 @@ public class ModConfig {
                         }
                     }
                 } catch (Exception e) {
-                    System.err.println("Failed to read or parse " + url.getPath() + ". This file will be skipped.");
+                    ORESMod.LOGGER.error("Failed to read or parse config file at {}. It will be skipped.", url.getPath(), e);
                 }
             }
-            System.out.println("Finished loading generated configs. Total entries to generate from datapacks: " + TO_GENERATE.size());
+            ORESMod.LOGGER.info("Finished loading datapack configs. Total entries to generate: {}", TO_GENERATE.size());
         } catch (Exception e) {
-            System.err.println("An error occurred while searching for generated.json files.");
+            ORESMod.LOGGER.error("An error occurred while searching for '{}' files.", configPath, e);
         }
     }
 
@@ -83,15 +85,15 @@ public class ModConfig {
         try {
             if (Files.notExists(CONFIG_PATH)) {
                 Files.createDirectories(CONFIG_PATH.getParent());
-                String defaultConfig = generateDefaultConfigContent();
+                String defaultConfig = generateDefaultTomlContent();
                 Files.writeString(CONFIG_PATH, defaultConfig);
             }
 
-            System.out.println("Loading ORES user configuration from ores_config.toml...");
-            specificVariantSettings.clear();
-            materialSettings.clear();
-            oreGenerationSettings.clear();
-            debugMode = false;
+            ORESMod.LOGGER.info("Loading ORES user configuration from ores_config.toml...");
+            SPECIFIC_VARIANT_SETTINGS.clear();
+            MATERIAL_SETTINGS.clear();
+            ORE_GENERATION_SETTINGS.clear();
+            DEBUG_MODE = false;
 
             List<String> lines = Files.readAllLines(CONFIG_PATH);
             String currentSection = "";
@@ -99,7 +101,7 @@ public class ModConfig {
             for (String line : lines) {
                 line = line.trim();
                 if (line.equalsIgnoreCase("debug = true")) {
-                    debugMode = true;
+                    DEBUG_MODE = true;
                 }
                 if (line.startsWith("[") && line.endsWith("]")) {
                     currentSection = line.substring(1, line.length() - 1);
@@ -110,18 +112,19 @@ public class ModConfig {
                     String key = parts[0].trim();
                     boolean value = Boolean.parseBoolean(parts[1].trim());
                     switch (currentSection) {
-                        case "materials" -> materialSettings.put(key, value);
-                        case "specific_variants" -> specificVariantSettings.put(key, value);
-                        case "ore_variants" -> oreGenerationSettings.put(key, value);
+                        case "materials" -> MATERIAL_SETTINGS.put(key, value);
+                        case "specific_variants" -> SPECIFIC_VARIANT_SETTINGS.put(key, value);
+                        case "ore_variants" -> ORE_GENERATION_SETTINGS.put(key, value);
                     }
                 }
             }
-            System.out.println("ORES user configuration loaded. Debug mode is: " + (debugMode ? "ON" : "OFF"));
+            ORESMod.LOGGER.info("ORES user configuration loaded. Debug mode is: {}", (DEBUG_MODE ? "ON" : "OFF"));
         } catch (IOException e) {
-            System.err.println("Critical error: Could not create or read the configuration file for the ORES mod.");
+            ORESMod.LOGGER.error("Could not create or read the configuration file.", e);
         }
     }
 
+    // -=-=-=- PUBLIC ACCESSORS -=-=-=-
     public static boolean isVariantEnabled(Materials material, Variants variant) {
         String variantId = variant.getFormattedId(material.getId());
 
@@ -129,8 +132,8 @@ public class ModConfig {
             return false;
         }
 
-        // Le mode Datagen ou le mode Debug active tout
-        if (debugMode || System.getProperty("fabric-api.datagen") != null) {
+        boolean isDatagen = System.getProperty("fabric-api.datagen") != null;
+        if (DEBUG_MODE || isDatagen) {
             return true;
         }
 
@@ -138,30 +141,38 @@ public class ModConfig {
             return true;
         }
 
-        String[] configKeys = variant.getConfig();
-        if (configKeys == null || configKeys.length == 0) {
+        if (!MATERIAL_SETTINGS.getOrDefault(material.getId(), false)) {
             return false;
         }
 
-        if (!materialSettings.getOrDefault(material.getId(), false)) {
+        Variants.Category category = variant.getCategory();
+        if (category == Variants.Category.ORE || category == Variants.Category.FALLING_ORE || category == Variants.Category.INVERTED_FALLING_ORE) {
+            return isOreVariantEnabled(variant.name());
+        }
+
+        String[] configKeys = variant.getConfig();
+        if (configKeys == null) {
             return false;
         }
 
         for (String key : configKeys) {
-            if (specificVariantSettings.getOrDefault(key, false)) {
+            if (SPECIFIC_VARIANT_SETTINGS.getOrDefault(key, false)) {
                 return true;
             }
         }
+
         return false;
     }
 
     public static boolean isOreVariantEnabled(String variantName) {
-        if (debugMode || System.getProperty("fabric-api.datagen") != null) {
+        boolean isDatagen = System.getProperty("fabric-api.datagen") != null;
+        if (DEBUG_MODE || isDatagen) {
             return true;
         }
-        return oreGenerationSettings.getOrDefault(variantName, true);
+        return ORE_GENERATION_SETTINGS.getOrDefault(variantName, true);
     }
 
+    // -=-=-=- HELPERS -=-=-=-
     private static void populateValidIds() {
         for (Materials material : Materials.values()) {
             for (Variants variant : Variants.values()) {
@@ -170,8 +181,7 @@ public class ModConfig {
         }
     }
 
-    private static String generateDefaultConfigContent() {
-        // Cette méthode dépend de TO_GENERATE, c'est pourquoi on la laisse ici.
+    private static String generateDefaultTomlContent() {
         StringBuilder content = new StringBuilder();
         content.append("# ORES Mod Configuration File\n\n");
         content.append("# Enable debug mode to register all items and blocks, ignoring all other settings.\n");

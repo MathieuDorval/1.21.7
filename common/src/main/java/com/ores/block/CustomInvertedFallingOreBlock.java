@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * A custom inverted falling ore block that drops experience when mined.
+ */
 package com.ores.block;
 
 import com.mojang.serialization.MapCodec;
@@ -19,40 +23,44 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class CustomInvertedFallingOreBlock extends CustomInvertedFallingBlock {
-    private final UniformInt xpRange;
 
+    // -=-=-=- CONSTANTS & PROPERTIES -=-=-=-
     public static final MapCodec<CustomInvertedFallingOreBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     propertiesCodec(),
-                    UniformInt.CODEC.fieldOf("xp_range").forGetter(b -> b.xpRange)
+                    UniformInt.CODEC.fieldOf("xp_range").forGetter(block -> block.xpRange)
             ).apply(instance, CustomInvertedFallingOreBlock::new)
     );
 
+    // -=-=-=- FIELDS -=-=-=-
+    private final UniformInt xpRange;
+
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public CustomInvertedFallingOreBlock(Properties properties, UniformInt xpRange) {
-        // Correction ici : on passe 'false' pour le paramètre 'dropsOnFalling'
         super(properties, false);
         this.xpRange = xpRange;
     }
 
+    // -=-=-=- OVERRIDES -=-=-=-
     @Override
-    public @NotNull BlockState playerWillDestroy(Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Player pPlayer) {
-        if (!pLevel.isClientSide && pLevel instanceof ServerLevel serverLevel) {
-            if (!pPlayer.getAbilities().instabuild) {
-                this.dropExperience(serverLevel, pPos, pPlayer.getMainHandItem());
+    public @NotNull BlockState playerWillDestroy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            if (!player.getAbilities().instabuild) {
+                this.dropExperience(serverLevel, pos, player.getMainHandItem());
             }
         }
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
-        return pState;
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
-    public void dropExperience(ServerLevel pLevel, BlockPos pPos, ItemStack pTool) {
-        Optional<Holder.Reference<Enchantment>> silkTouchHolder = pLevel.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.SILK_TOUCH));
-        int silkLevel = silkTouchHolder.map(holder -> EnchantmentHelper.getItemEnchantmentLevel(holder, pTool)).orElse(0);
+    // -=-=-=- HELPERS -=-=-=-
+    public void dropExperience(ServerLevel level, BlockPos pos, ItemStack tool) {
+        Optional<Holder.Reference<Enchantment>> silkTouchHolder = level.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.SILK_TOUCH));
+        int silkLevel = silkTouchHolder.map(holder -> EnchantmentHelper.getItemEnchantmentLevel(holder, tool)).orElse(0);
 
         if (silkLevel == 0) {
-            int i = this.xpRange.sample(pLevel.random);
-            if (i > 0) {
-                this.popExperience(pLevel, pPos, i);
+            int experience = this.xpRange.sample(level.random);
+            if (experience > 0) {
+                this.popExperience(level, pos, experience);
             }
         }
     }

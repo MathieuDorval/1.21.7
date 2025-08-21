@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * Defines all base materials, their properties, and associated data.
+ */
 package com.ores.core;
 
 import net.minecraft.world.item.Rarity;
@@ -7,10 +11,9 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-
 public enum Materials {
 
+    // -=-=-=- ENUM VALUES -=-=-=-
     COAL("coal", "minecraft:coal",
             new ItemProps(64, Rarity.COMMON, false, null, 1600),
             new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.TERRACOTTA_BLACK, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 0, Tools.PICKAXE),
@@ -53,33 +56,33 @@ public enum Materials {
             new OreProps(1.0f, 0.0f, 3, 7, false, 0, 2, 1, 1, "minecraft:emerald"),
             new Tags(true, false, false, false, true)
     ),
-    DIAMOND("diamond",  "minecraft:diamond",
+    DIAMOND("diamond", "minecraft:diamond",
             new ItemProps(64, Rarity.RARE, false, 7269586, null),
             new BlockProps(1.0f, 0.0f, SoundType.STONE, MapColor.DIAMOND, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 2, Tools.PICKAXE),
             new OreProps(1.0f, 0.0f, 3, 7, false, 0, 2, 1, 1, "minecraft:diamond"),
             new Tags(true, false, false, false, true)
     ),
-    QUARTZ("quartz",  "minecraft:quartz",
+    QUARTZ("quartz", "minecraft:quartz",
             new ItemProps(64, Rarity.COMMON, false, 14931140, null),
             new BlockProps(0.0f, 0.0f, SoundType.STONE, MapColor.QUARTZ, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 2, 5, false, 0, 0, 1, 1, "minecraft:quartz"),
             new Tags(false, false, false, false, true)
     ),
-    NETHERITE("netherite",  "minecraft:netherite_ingot",
+    NETHERITE("netherite", "minecraft:netherite_ingot",
             new ItemProps(64, Rarity.EPIC, true, 6445145, null),
             new BlockProps(50.0f, 1200.0f, SoundType.NETHERITE_BLOCK, MapColor.COLOR_BLACK, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 3, Tools.PICKAXE),
             null,
             new Tags(true, false, false, false, true)
     ),
-    TIN("tin",  "ores:tin_ingot",
+    TIN("tin", "ores:tin_ingot",
             new ItemProps(64, Rarity.EPIC, true, 12895428, null),
             new BlockProps(0.0f, 0.0f, SoundType.METAL, MapColor.RAW_IRON, NoteBlockInstrument.BASEDRUM, true, 0, 0.6f, 1.0f, 1.0f, 0, null, 1, Tools.PICKAXE),
             new OreProps(0.0f, 0.0f, 0, 0, false, 0, 1, 1, 1, "ores:raw_tin"),
             new Tags(true, false, false, false, true)
     );
 
-    // --- Enums Internes ---
-    public enum Tools { PICKAXE, SHOVEL, AXE, HOE, SWORD }
+    // -=-=-=- RECORDS & PROPS -=-=-=-
+    public enum Tools {PICKAXE, SHOVEL, AXE, HOE, SWORD}
 
     public record ItemProps(
             @Nullable Integer maxStackSize, @Nullable Rarity rarity, @Nullable Boolean isFireResistant,
@@ -104,7 +107,7 @@ public enum Materials {
             Boolean beacon, Boolean piglinRepellents, Boolean piglinLoved, Boolean piglinFood, Boolean trimMaterial
     ) {}
 
-
+    // -=-=-=- FIELDS & CONSTRUCTOR -=-=-=-
     private final String id;
     private final String idBase;
     private final ItemProps itemProps;
@@ -112,7 +115,7 @@ public enum Materials {
     private final OreProps oreProps;
     private final Tags tags;
 
-    Materials(String id, String idBase, ItemProps itemProps, BlockProps blockProps, OreProps oreProps, Tags tags) {
+    Materials(String id, String idBase, ItemProps itemProps, BlockProps blockProps, @Nullable OreProps oreProps, Tags tags) {
         this.id = id;
         this.idBase = idBase;
         this.itemProps = itemProps;
@@ -121,6 +124,7 @@ public enum Materials {
         this.tags = tags;
     }
 
+    // -=-=-=- GETTERS -=-=-=-
     public String getId() { return id; }
     public String getIdBase() { return idBase; }
     public ItemProps getItemProps() { return itemProps; }

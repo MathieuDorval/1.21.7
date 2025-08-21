@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * A custom redstone ore block that lights up and creates particles on interaction.
+ */
 package com.ores.block;
 
 import com.mojang.serialization.Codec;
@@ -33,18 +37,22 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Optional;
 
 public class CustomRedstoneOreBlock extends Block {
-    public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
-    private final UniformInt xpRange;
-    private final int particleColor;
 
+    // -=-=-=- CONSTANTS & PROPERTIES -=-=-=-
+    public static final BooleanProperty LIT = RedstoneTorchBlock.LIT;
     public static final MapCodec<CustomRedstoneOreBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
                     propertiesCodec(),
-                    UniformInt.CODEC.fieldOf("xp_range").forGetter(b -> b.xpRange),
-                    Codec.INT.fieldOf("particle_color").forGetter(b -> b.particleColor)
+                    UniformInt.CODEC.fieldOf("xp_range").forGetter(block -> block.xpRange),
+                    Codec.INT.fieldOf("particle_color").forGetter(block -> block.particleColor)
             ).apply(instance, CustomRedstoneOreBlock::new)
     );
 
+    // -=-=-=- FIELDS -=-=-=-
+    private final UniformInt xpRange;
+    private final int particleColor;
+
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public CustomRedstoneOreBlock(Properties properties, UniformInt xpRange, int particleColor) {
         super(properties);
         this.xpRange = xpRange;
@@ -52,6 +60,7 @@ public class CustomRedstoneOreBlock extends Block {
         this.registerDefaultState(this.defaultBlockState().setValue(LIT, false));
     }
 
+    // -=-=-=- OVERRIDES -=-=-=-
     @Override
     protected @NotNull MapCodec<? extends Block> codec() {
         return CODEC;
@@ -59,14 +68,14 @@ public class CustomRedstoneOreBlock extends Block {
 
     @Override
     public void attack(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player) {
-        this.interact(state, level, pos);
+        interact(state, level, pos);
         super.attack(state, level, pos, player);
     }
 
     @Override
     public void stepOn(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Entity entity) {
         if (!entity.isSteppingCarefully()) {
-            this.interact(state, level, pos);
+            interact(state, level, pos);
         }
         super.stepOn(level, pos, state, entity);
     }
@@ -74,18 +83,12 @@ public class CustomRedstoneOreBlock extends Block {
     @Override
     public @NotNull InteractionResult useItemOn(@NotNull ItemStack stack, @NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull Player player, @NotNull InteractionHand hand, @NotNull BlockHitResult hitResult) {
         if (level.isClientSide) {
-            this.spawnParticles(level, pos);
+            spawnParticles(level, pos);
         } else {
-            this.interact(state, level, pos);
+            interact(state, level, pos);
         }
-        return (stack.getItem() instanceof BlockItem && (new BlockPlaceContext(player, hand, stack, hitResult)).canPlace() ? InteractionResult.PASS : InteractionResult.SUCCESS);
-    }
-
-    private void interact(BlockState state, Level level, BlockPos pos) {
-        this.spawnParticles(level, pos);
-        if (!state.getValue(LIT)) {
-            level.setBlock(pos, state.setValue(LIT, true), 3);
-        }
+        boolean canPlace = stack.getItem() instanceof BlockItem && (new BlockPlaceContext(player, hand, stack, hitResult)).canPlace();
+        return canPlace ? InteractionResult.PASS : InteractionResult.SUCCESS;
     }
 
     @Override
@@ -101,50 +104,58 @@ public class CustomRedstoneOreBlock extends Block {
     }
 
     @Override
-    public @NotNull BlockState playerWillDestroy(Level pLevel, @NotNull BlockPos pPos, @NotNull BlockState pState, @NotNull Player pPlayer) {
-        if (!pLevel.isClientSide && pLevel instanceof ServerLevel serverLevel) {
-            if (!pPlayer.getAbilities().instabuild) {
-                this.dropExperience(serverLevel, pPos, pPlayer.getMainHandItem());
+    public @NotNull BlockState playerWillDestroy(@NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull Player player) {
+        if (!level.isClientSide && level instanceof ServerLevel serverLevel) {
+            if (!player.getAbilities().instabuild) {
+                this.dropExperience(serverLevel, pos, player.getMainHandItem());
             }
         }
-        super.playerWillDestroy(pLevel, pPos, pState, pPlayer);
-        return pState;
-    }
-
-    public void dropExperience(ServerLevel pLevel, BlockPos pPos, ItemStack pTool) {
-        Optional<Holder.Reference<Enchantment>> silkTouchHolder = pLevel.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.SILK_TOUCH));
-        int silkLevel = silkTouchHolder.map(holder -> EnchantmentHelper.getItemEnchantmentLevel(holder, pTool)).orElse(0);
-        if (silkLevel == 0) {
-            int i = this.xpRange.sample(pLevel.random);
-            if (i > 0) {
-                this.popExperience(pLevel, pPos, i);
-            }
-        }
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
     public void animateTick(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull RandomSource random) {
         if (state.getValue(LIT)) {
-            this.spawnParticles(level, pos);
-        }
-    }
-
-    private void spawnParticles(Level level, BlockPos pos) {
-        DustParticleOptions particleOptions = new DustParticleOptions(this.particleColor, 1.0F);
-        for (Direction direction : Direction.values()) {
-            BlockPos blockpos = pos.relative(direction);
-            if (!level.getBlockState(blockpos).isSolidRender()) {
-                Direction.Axis direction$axis = direction.getAxis();
-                double d1 = direction$axis == Direction.Axis.X ? 0.5D + 0.5625D * (double) direction.getStepX() : (double) level.random.nextFloat();
-                double d2 = direction$axis == Direction.Axis.Y ? 0.5D + 0.5625D * (double) direction.getStepY() : (double) level.random.nextFloat();
-                double d3 = direction$axis == Direction.Axis.Z ? 0.5D + 0.5625D * (double) direction.getStepZ() : (double) level.random.nextFloat();
-                level.addParticle(particleOptions, (double) pos.getX() + d1, (double) pos.getY() + d2, (double) pos.getZ() + d3, 0.0D, 0.0D, 0.0D);
-            }
+            spawnParticles(level, pos);
         }
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(LIT);
+    }
+
+    // -=-=-=- HELPERS -=-=-=-
+    private void interact(BlockState state, Level level, BlockPos pos) {
+        spawnParticles(level, pos);
+        if (!state.getValue(LIT)) {
+            level.setBlock(pos, state.setValue(LIT, true), 3);
+        }
+    }
+
+    public void dropExperience(ServerLevel level, BlockPos pos, ItemStack tool) {
+        Optional<Holder.Reference<Enchantment>> silkTouchHolder = level.registryAccess().lookup(Registries.ENCHANTMENT).flatMap(lookup -> lookup.get(Enchantments.SILK_TOUCH));
+        int silkLevel = silkTouchHolder.map(holder -> EnchantmentHelper.getItemEnchantmentLevel(holder, tool)).orElse(0);
+        if (silkLevel == 0) {
+            int experience = this.xpRange.sample(level.random);
+            if (experience > 0) {
+                this.popExperience(level, pos, experience);
+            }
+        }
+    }
+
+    private void spawnParticles(Level level, BlockPos pos) {
+        DustParticleOptions particleOptions = new DustParticleOptions(this.particleColor, 1.0F);
+        RandomSource random = level.random;
+        for (Direction direction : Direction.values()) {
+            BlockPos adjacentPos = pos.relative(direction);
+            if (!level.getBlockState(adjacentPos).isSolidRender()) {
+                Direction.Axis axis = direction.getAxis();
+                double xOffset = axis == Direction.Axis.X ? 0.5 + 0.5625 * direction.getStepX() : random.nextDouble();
+                double yOffset = axis == Direction.Axis.Y ? 0.5 + 0.5625 * direction.getStepY() : random.nextDouble();
+                double zOffset = axis == Direction.Axis.Z ? 0.5 + 0.5625 * direction.getStepZ() : random.nextDouble();
+                level.addParticle(particleOptions, pos.getX() + xOffset, pos.getY() + yOffset, pos.getZ() + zOffset, 0.0, 0.0, 0.0);
+            }
+        }
     }
 }

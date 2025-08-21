@@ -1,6 +1,6 @@
 /**
  * ORES MOD | __mathieu
- * ITEMS TAGS DATAGEN
+ * Handles the datagen for item tags.
  */
 package com.ores.fabric.datagen;
 
@@ -15,7 +15,6 @@ import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
@@ -25,72 +24,82 @@ import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
 public class ModItemTagProvider extends FabricTagProvider<Item> {
+
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public ModItemTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, Registries.ITEM, registriesFuture);
     }
 
+    // -=-=-=- TAG GENERATION -=-=-=-
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         for (Materials material : Materials.values()) {
-            TagKey<Item> materialItemsTag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, material.getId() + "_items"));
-            TagKey<Item> materialOresTag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, material.getId() + "_ores"));
+            TagKey<Item> materialItemsTag = createModTag(material.getId() + "_items");
+            TagKey<Item> materialOresTag = createModTag(material.getId() + "_ores");
 
             for (Variants variant : Variants.values()) {
-                String formattedId = variant.getFormattedId(material.getId());
-                ResourceLocation itemLocation = getItemLocation(formattedId);
-                Variants.Category category = variant.getCategory();
-                if (category == Variants.Category.ORE || category == Variants.Category.FALLING_ORE || category == Variants.Category.INVERTED_FALLING_ORE) {
-                    builder(materialOresTag).addOptional(ResourceKey.create(Registries.ITEM, itemLocation));
-                } else {
-                    TagKey<Item> variantItemsTag = TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, variant.name().toLowerCase() + "_items"));
-                    builder(materialItemsTag).addOptional(ResourceKey.create(Registries.ITEM, itemLocation));
-                    builder(variantItemsTag).addOptional(ResourceKey.create(Registries.ITEM, itemLocation));
-                }
-                findItemForRecipe(material, variant).ifPresent(item -> {
-                    Materials.Tags materialTags = material.getTags();
-                    Variants.ItemProps variantProps = variant.getItemProps();
-
-                    if (materialTags != null && variantProps != null) {
-                        // -=-=-=- BEACON MATERIAL -=-=-=-
-                        if (materialTags.beacon() && variantProps.beacon()) {
-                            builder(ItemTags.BEACON_PAYMENT_ITEMS).add(item.builtInRegistryHolder().key());
-                        }
-                        // -=-=-=- PIGLIN REPELLENTS -=-=-=-
-                        if (materialTags.piglinRepellents() && variantProps.piglinRepellents()) {
-                            builder(ItemTags.PIGLIN_REPELLENTS).add(item.builtInRegistryHolder().key());
-                        }
-                        // -=-=-=- PIGLIN LOVED -=-=-=-
-                        if (materialTags.piglinLoved() && variantProps.piglinLoved()) {
-                            builder(ItemTags.PIGLIN_LOVED).add(item.builtInRegistryHolder().key());
-                        }
-                        // -=-=-=- PIGLIN FOOD -=-=-=-
-                        if (materialTags.piglinFood() && variantProps.piglinFood()) {
-                            builder(ItemTags.PIGLIN_FOOD).add(item.builtInRegistryHolder().key());
-                        }
-                        // -=-=-=- TRIM MATERIALS -=-=-=-
-                        if (materialTags.trimMaterial() && variantProps.trimable() != null) {
-                            builder(ItemTags.TRIM_MATERIALS).add(item.builtInRegistryHolder().key());
-                        }
-                    }
+                findItem(material, variant).ifPresent(item -> {
+                    applyCategoryTags(item, material, variant, materialItemsTag, materialOresTag);
+                    applyPropertyTags(item, material, variant);
                 });
             }
         }
     }
 
-    private static ResourceLocation getItemLocation(String formattedId) {
-        if (ModConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
-            return ResourceLocation.fromNamespaceAndPath("minecraft", formattedId);
+    // -=-=-=- HELPERS -=-=-=-
+    private void applyCategoryTags(Item item, Materials material, Variants variant, TagKey<Item> materialItemsTag, TagKey<Item> materialOresTag) {
+        Variants.Category category = variant.getCategory();
+
+        if (category == Variants.Category.ORE || category == Variants.Category.FALLING_ORE || category == Variants.Category.INVERTED_FALLING_ORE) {
+            builder(materialOresTag).add(item.builtInRegistryHolder().key());
+        } else {
+            TagKey<Item> variantItemsTag = createModTag(variant.name().toLowerCase() + "_items");
+            builder(materialItemsTag).add(item.builtInRegistryHolder().key());
+            builder(variantItemsTag).add(item.builtInRegistryHolder().key());
         }
-        return ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, formattedId);
     }
 
-    private static Optional<Item> findItemForRecipe(Materials material, Variants variant) {
+    private void applyPropertyTags(Item item, Materials material, Variants variant) {
+        Materials.Tags materialTags = material.getTags();
+        Variants.ItemProps variantProps = variant.getItemProps();
+
+        if (materialTags == null || variantProps == null) return;
+
+        // === BEACON MATERIAL ===
+        if (materialTags.beacon() && variantProps.beacon()) {
+            builder(ItemTags.BEACON_PAYMENT_ITEMS).add(item.builtInRegistryHolder().key());
+        }
+        // === PIGLIN REPELLENTS ===
+        if (materialTags.piglinRepellents() && variantProps.piglinRepellents()) {
+            builder(ItemTags.PIGLIN_REPELLENTS).add(item.builtInRegistryHolder().key());
+        }
+        // === PIGLIN LOVED ===
+        if (materialTags.piglinLoved() && variantProps.piglinLoved()) {
+            builder(ItemTags.PIGLIN_LOVED).add(item.builtInRegistryHolder().key());
+        }
+        // === PIGLIN FOOD ===
+        if (materialTags.piglinFood() && variantProps.piglinFood()) {
+            builder(ItemTags.PIGLIN_FOOD).add(item.builtInRegistryHolder().key());
+        }
+        // === TRIM MATERIALS ===
+        if (materialTags.trimMaterial() && variantProps.trimable()) {
+            builder(ItemTags.TRIM_MATERIALS).add(item.builtInRegistryHolder().key());
+        }
+    }
+
+    private Optional<Item> findItem(Materials material, Variants variant) {
         String formattedId = variant.getFormattedId(material.getId());
         RegistrySupplier<Item> modItemSupplier = ModItems.DYNAMIC_ITEMS.get(formattedId);
-        if (modItemSupplier != null) return Optional.of(modItemSupplier.get());
+        if (modItemSupplier != null) {
+            return Optional.of(modItemSupplier.get());
+        }
         if (ModConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
             return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
         }
         return Optional.empty();
+    }
+
+    private TagKey<Item> createModTag(String path) {
+        return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, path));
     }
 }

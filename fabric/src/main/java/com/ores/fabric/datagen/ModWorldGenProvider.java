@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * Handles the datagen for dynamic registries like trim materials.
+ */
 package com.ores.fabric.datagen;
 
 import com.mojang.serialization.Lifecycle;
@@ -16,10 +20,13 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.CompletableFuture;
 
 public class ModWorldGenProvider extends FabricDynamicRegistryProvider {
+
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public ModWorldGenProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> registriesFuture) {
         super(output, registriesFuture);
     }
 
+    // -=-=-=- CONFIGURATION -=-=-=-
     @Override
     protected void configure(HolderLookup.Provider registries, Entries entries) {
         BootstrapContext<TrimMaterial> context = new BootstrapContext<>() {

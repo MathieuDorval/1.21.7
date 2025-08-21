@@ -1,5 +1,12 @@
+/**
+ * ORES MOD | __mathieu
+ * A custom block that "falls" upwards when the space above it is empty.
+ */
 package com.ores.block;
 
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
@@ -13,13 +20,28 @@ import org.jetbrains.annotations.NotNull;
 
 public class CustomInvertedFallingBlock extends Block {
 
+    // -=-=-=- CONSTANTS & PROPERTIES -=-=-=-
+    public static final MapCodec<CustomInvertedFallingBlock> CODEC = RecordCodecBuilder.mapCodec(instance ->
+            instance.group(
+                    propertiesCodec(),
+                    Codec.BOOL.fieldOf("drops_on_falling").forGetter(block -> block.dropsOnFalling)
+            ).apply(instance, CustomInvertedFallingBlock::new)
+    );
+
+    // -=-=-=- FIELDS -=-=-=-
     private final boolean dropsOnFalling;
 
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public CustomInvertedFallingBlock(Properties properties, boolean dropsOnFalling) {
-        super(properties.randomTicks());
+        super(properties);
         this.dropsOnFalling = dropsOnFalling;
     }
 
+    // -=-=-=- OVERRIDES -=-=-=-
+    @Override
+    protected @NotNull MapCodec<? extends Block> codec() {
+        return CODEC;
+    }
 
     @Override
     public void onPlace(@NotNull BlockState state, @NotNull Level level, @NotNull BlockPos pos, @NotNull BlockState oldState, boolean isMoving) {
@@ -37,8 +59,7 @@ public class CustomInvertedFallingBlock extends Block {
             level.removeBlock(pos, false);
             level.setBlock(posAbove, state, 3);
         }
-        // Note : La logique pour utiliser 'this.dropsOnFalling' irait ici,
-        // par exemple dans un bloc 'else' si le bloc ne peut pas monter.
+        // TODO: Implement logic for 'this.dropsOnFalling' if the block cannot rise.
     }
 
     @Override
@@ -46,13 +67,15 @@ public class CustomInvertedFallingBlock extends Block {
         if (random.nextInt(16) == 0) {
             BlockPos posAbove = pos.above();
             if (canRise(level.getBlockState(posAbove))) {
-                double x = (double)pos.getX() + random.nextDouble();
-                double y = (double)pos.getY() + 1.05D;
-                double z = (double)pos.getZ() + random.nextDouble();
+                double x = (double) pos.getX() + random.nextDouble();
+                double y = (double) pos.getY() + 1.05D;
+                double z = (double) pos.getZ() + random.nextDouble();
                 level.addParticle(new BlockParticleOption(ParticleTypes.FALLING_DUST, state), x, y, z, 0.0D, 0.0D, 0.0D);
             }
         }
     }
+
+    // -=-=-=- HELPERS -=-=-=-
     public static boolean canRise(BlockState state) {
         return state.isAir() || state.is(BlockTags.FIRE) || state.liquid() || state.canBeReplaced();
     }

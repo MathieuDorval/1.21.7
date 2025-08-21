@@ -1,6 +1,6 @@
 /**
  * ORES MOD | __mathieu
- * MODELS DATAGEN
+ * Handles the datagen for block and item models.
  */
 package com.ores.fabric.datagen;
 
@@ -17,10 +17,13 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 public class ModModelProvider extends FabricModelProvider {
+
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public ModModelProvider(FabricDataOutput output) {
         super(output);
     }
 
+    // -=-=-=- MODEL GENERATION -=-=-=-
     @Override
     public void generateBlockStateModels(BlockModelGenerators blockStateModelGenerator) {
         for (RegistrySupplier<Block> blockSupplier : ModBlocks.DYNAMIC_BLOCKS.values()) {

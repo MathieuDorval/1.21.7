@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * Handles the datagen for all dynamic item and block textures.
+ */
 package com.ores.fabric.datagen;
 
 import com.google.common.hash.HashCode;
@@ -27,15 +31,18 @@ import java.util.concurrent.CompletableFuture;
 
 public class TexturesGenerator implements DataProvider {
 
+    // -=-=-=- FIELDS -=-=-=-
     private final FabricDataOutput output;
     private final Path autogenRoot;
 
+    // -=-=-=- CONSTRUCTOR -=-=-=-
     public TexturesGenerator(FabricDataOutput output) {
         this.output = output;
         this.autogenRoot = output.getModContainer().findPath("assets/ores/textures/autogen")
                 .orElseThrow(() -> new IllegalStateException("Could not find autogen textures directory"));
     }
 
+    // -=-=-=- DATA GENERATION -=-=-=-
     @Override
     public @NotNull CompletableFuture<?> run(CachedOutput cachedOutput) {
         List<CompletableFuture<?>> futures = new ArrayList<>();
@@ -90,6 +97,7 @@ public class TexturesGenerator implements DataProvider {
         }
     }
 
+    // -=-=-=- TEXTURE GENERATION LOGIC -=-=-=-
     private byte[] generateOreTexture(Materials material, Variants variant) throws IOException {
         Variants.OreProps oreProps = variant.getOreProps();
         if (oreProps == null) return null;
@@ -167,6 +175,7 @@ public class TexturesGenerator implements DataProvider {
         return toByteArray(finalImage);
     }
 
+    // -=-=-=- UTILS -=-=-=-
     private byte[] toByteArray(BufferedImage image) throws IOException {
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ImageIO.write(image, "png", baos);

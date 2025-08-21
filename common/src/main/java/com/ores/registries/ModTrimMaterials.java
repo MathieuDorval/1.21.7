@@ -1,3 +1,7 @@
+/**
+ * ORES MOD | __mathieu
+ * Handles the datagen registration of custom armor trim materials.
+ */
 package com.ores.registries;
 
 import com.ores.core.Materials;
@@ -17,30 +21,33 @@ import java.util.stream.Stream;
 
 public class ModTrimMaterials {
 
+    // -=-=-=- CONSTANTS -=-=-=-
     private static final Set<String> VANILLA_TRIM_MATERIALS = Stream.of(
             "quartz", "iron", "netherite", "redstone", "copper",
             "gold", "emerald", "diamond", "lapis", "amethyst", "resin"
     ).collect(Collectors.toSet());
 
+    // -=-=-=- DATAGEN -=-=-=-
     public static void bootstrap(BootstrapContext<TrimMaterial> context) {
         for (Materials material : Materials.values()) {
             Materials.ItemProps itemProps = material.getItemProps();
 
-            if (itemProps.trimColor() != null && !VANILLA_TRIM_MATERIALS.contains(material.getId())) {
-                MaterialAssetGroup assetGroup = MaterialAssetGroup.create(material.getId());
-                ResourceKey<TrimMaterial> materialKey = registryKey(material.getId());
+            if (itemProps != null && itemProps.trimColor() != null && !VANILLA_TRIM_MATERIALS.contains(material.getId())) {
+                ResourceKey<TrimMaterial> materialKey = createRegistryKey(material.getId());
                 Style style = Style.EMPTY.withColor(itemProps.trimColor());
+                MaterialAssetGroup assetGroup = MaterialAssetGroup.create(material.getId());
                 register(context, materialKey, style, assetGroup);
             }
         }
     }
 
-    private static void register(BootstrapContext<TrimMaterial> bootstrapContext, ResourceKey<TrimMaterial> resourceKey, Style style, MaterialAssetGroup materialAssetGroup) {
-        Component component = Component.translatable(Util.makeDescriptionId("trim_material", resourceKey.location())).withStyle(style);
-        bootstrapContext.register(resourceKey, new TrimMaterial(materialAssetGroup, component));
+    // -=-=-=- HELPERS -=-=-=-
+    private static void register(BootstrapContext<TrimMaterial> context, ResourceKey<TrimMaterial> key, Style style, MaterialAssetGroup assetGroup) {
+        Component description = Component.translatable(Util.makeDescriptionId("trim_material", key.location())).withStyle(style);
+        context.register(key, new TrimMaterial(assetGroup, description));
     }
 
-    private static ResourceKey<TrimMaterial> registryKey(String name) {
+    private static ResourceKey<TrimMaterial> createRegistryKey(String name) {
         return ResourceKey.create(Registries.TRIM_MATERIAL, ResourceLocation.fromNamespaceAndPath("ores", name));
     }
 }
