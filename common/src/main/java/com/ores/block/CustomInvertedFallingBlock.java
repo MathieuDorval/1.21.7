@@ -13,6 +13,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -58,8 +59,12 @@ public class CustomInvertedFallingBlock extends Block {
         if (canRise(level.getBlockState(posAbove)) && pos.getY() < level.getMaxY() - 1) {
             level.removeBlock(pos, false);
             level.setBlock(posAbove, state, 3);
+        } else {
+            level.removeBlock(pos, false);
+            if (this.dropsOnFalling) {
+                Block.popResource(level, pos, new ItemStack(this));
+            }
         }
-        // TODO: Implement logic for 'this.dropsOnFalling' if the block cannot rise.
     }
 
     @Override
