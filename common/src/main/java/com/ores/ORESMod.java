@@ -5,7 +5,6 @@
 package com.ores;
 
 import com.ores.config.ModConfig;
-import com.ores.event.WorldGenerationEvents;
 import com.ores.registries.ModBlocks;
 import com.ores.registries.ModCreativeTab;
 import com.ores.registries.ModItems;
@@ -25,7 +24,6 @@ public final class ORESMod {
         ModCreativeTab.initialize();
         ModBlocks.initialize();
         ModItems.initialize();
-        WorldGenerationEvents.initialize();
         LOGGER.info("ORES Mod initialized successfully.");
     }
 }

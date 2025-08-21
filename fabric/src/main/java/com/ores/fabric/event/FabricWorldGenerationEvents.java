@@ -2,7 +2,7 @@
  * ORES MOD | __mathieu
  * Handles world generation modifications, specifically removing vanilla ore features.
  */
-package com.ores.event;
+package com.ores.fabric.event;
 
 import com.ores.ORESMod;
 import com.ores.core.Materials;
@@ -16,7 +16,7 @@ import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import java.util.ArrayList;
 import java.util.List;
 
-public class WorldGenerationEvents {
+public class FabricWorldGenerationEvents {
 
     // -=-=-=- INITIALIZATION -=-=-=-
     public static void initialize() {
