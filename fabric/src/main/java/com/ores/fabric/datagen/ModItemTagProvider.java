@@ -6,7 +6,6 @@ package com.ores.fabric.datagen;
 
 import com.ores.ORESMod;
 import com.ores.config.ModConfig;
-import com.ores.config.ModGeneratedConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import com.ores.registries.ModItems;
@@ -22,7 +21,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -80,7 +78,7 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
     }
 
     private static ResourceLocation getItemLocation(String formattedId) {
-        if (ModGeneratedConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
+        if (ModConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
             return ResourceLocation.fromNamespaceAndPath("minecraft", formattedId);
         }
         return ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, formattedId);
@@ -90,7 +88,7 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
         String formattedId = variant.getFormattedId(material.getId());
         RegistrySupplier<Item> modItemSupplier = ModItems.DYNAMIC_ITEMS.get(formattedId);
         if (modItemSupplier != null) return Optional.of(modItemSupplier.get());
-        if (ModGeneratedConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
+        if (ModConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
             return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
         }
         return Optional.empty();

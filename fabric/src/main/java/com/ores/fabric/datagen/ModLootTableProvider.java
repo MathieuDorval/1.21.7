@@ -4,7 +4,6 @@
  */
 package com.ores.fabric.datagen;
 
-import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import com.ores.registries.ModBlocks;

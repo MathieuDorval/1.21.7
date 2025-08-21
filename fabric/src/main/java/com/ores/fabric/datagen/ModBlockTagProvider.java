@@ -5,7 +5,6 @@
 package com.ores.fabric.datagen;
 
 import com.ores.config.ModConfig;
-import com.ores.config.ModGeneratedConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import com.ores.registries.ModBlocks;
@@ -19,7 +18,6 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
@@ -87,7 +85,7 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
         String formattedId = variant.getFormattedId(material.getId());
         RegistrySupplier<Block> modBlockSupplier = ModBlocks.DYNAMIC_BLOCKS.get(formattedId);
         if (modBlockSupplier != null) return Optional.of(modBlockSupplier.get());
-        if (ModGeneratedConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
+        if (ModConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
             return BuiltInRegistries.BLOCK.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
         }
         return Optional.empty();

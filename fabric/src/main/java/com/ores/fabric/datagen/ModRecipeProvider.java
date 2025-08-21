@@ -5,7 +5,7 @@
 package com.ores.fabric.datagen;
 
 import com.ores.ORESMod;
-import com.ores.config.ModGeneratedConfig;
+import com.ores.config.ModConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
 import com.ores.registries.ModItems;
@@ -143,7 +143,7 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
         String formattedId = variant.getFormattedId(material.getId());
         RegistrySupplier<Item> modItemSupplier = ModItems.DYNAMIC_ITEMS.get(formattedId);
         if (modItemSupplier != null) return Optional.of(modItemSupplier.get());
-        if (ModGeneratedConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
+        if (ModConfig.VANILLA_EXCLUSIONS.contains(formattedId)) {
             return BuiltInRegistries.ITEM.getOptional(ResourceLocation.fromNamespaceAndPath("minecraft", formattedId));
         }
         return Optional.empty();
