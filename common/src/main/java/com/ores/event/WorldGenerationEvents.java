@@ -20,11 +20,10 @@ public class WorldGenerationEvents {
 
     // -=-=-=- INITIALIZATION -=-=-=-
     public static void initialize() {
-        ORESMod.LOGGER.info("Applying biome modifications to remove vanilla ore features...");
+        ORESMod.LOGGER.info("Applying biome modifications to remove ore features...");
         BiomeModifications.removeProperties((biomeContext, properties) -> {
             GenerationProperties.Mutable generationProperties = properties.getGenerationProperties();
 
-            // Remove standard ores
             List<ResourceKey<PlacedFeature>> standardOresToRemove = new ArrayList<>();
             for (Holder<PlacedFeature> featureHolder : generationProperties.getFeatures(GenerationStep.Decoration.UNDERGROUND_ORES)) {
                 if (isStandardOreFeature(featureHolder)) {
@@ -35,7 +34,6 @@ public class WorldGenerationEvents {
                 standardOresToRemove.forEach(key -> generationProperties.removeFeature(GenerationStep.Decoration.UNDERGROUND_ORES, key));
             }
 
-            // Remove ore veins
             List<ResourceKey<PlacedFeature>> veinsToRemove = new ArrayList<>();
             for (Holder<PlacedFeature> featureHolder : generationProperties.getFeatures(GenerationStep.Decoration.VEGETAL_DECORATION)) {
                 if (isOreVeinFeature(featureHolder)) {

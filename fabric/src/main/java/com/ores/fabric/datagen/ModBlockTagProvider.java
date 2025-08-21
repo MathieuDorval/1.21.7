@@ -60,20 +60,20 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
         // === EFFICIENT TOOLS ===
         if (tool != null) {
             switch (tool) {
-                case PICKAXE -> builder(BlockTags.MINEABLE_WITH_PICKAXE).add(block.builtInRegistryHolder().key());
-                case AXE -> builder(BlockTags.MINEABLE_WITH_AXE).add(block.builtInRegistryHolder().key());
-                case SHOVEL -> builder(BlockTags.MINEABLE_WITH_SHOVEL).add(block.builtInRegistryHolder().key());
-                case HOE -> builder(BlockTags.MINEABLE_WITH_HOE).add(block.builtInRegistryHolder().key());
-                case SWORD -> builder(BlockTags.SWORD_EFFICIENT).add(block.builtInRegistryHolder().key());
+                case PICKAXE -> builder(BlockTags.MINEABLE_WITH_PICKAXE).addOptional(block.builtInRegistryHolder().key());
+                case AXE -> builder(BlockTags.MINEABLE_WITH_AXE).addOptional(block.builtInRegistryHolder().key());
+                case SHOVEL -> builder(BlockTags.MINEABLE_WITH_SHOVEL).addOptional(block.builtInRegistryHolder().key());
+                case HOE -> builder(BlockTags.MINEABLE_WITH_HOE).addOptional(block.builtInRegistryHolder().key());
+                case SWORD -> builder(BlockTags.SWORD_EFFICIENT).addOptional(block.builtInRegistryHolder().key());
             }
         }
 
         // === TOOL LEVELS ===
         if (toolLevel != null) {
             switch (toolLevel) {
-                case 1 -> builder(BlockTags.NEEDS_STONE_TOOL).add(block.builtInRegistryHolder().key());
-                case 2 -> builder(BlockTags.NEEDS_IRON_TOOL).add(block.builtInRegistryHolder().key());
-                case 3 -> builder(BlockTags.NEEDS_DIAMOND_TOOL).add(block.builtInRegistryHolder().key());
+                case 1 -> builder(BlockTags.NEEDS_STONE_TOOL).addOptional(block.builtInRegistryHolder().key());
+                case 2 -> builder(BlockTags.NEEDS_IRON_TOOL).addOptional(block.builtInRegistryHolder().key());
+                case 3 -> builder(BlockTags.NEEDS_DIAMOND_TOOL).addOptional(block.builtInRegistryHolder().key());
             }
         }
 
@@ -82,7 +82,7 @@ public class ModBlockTagProvider extends FabricTagProvider<Block> {
             Materials.Tags materialTags = material.getTags();
             Variants.BlockProps variantBlockProps = variant.getBlockProps();
             if (materialTags != null && variantBlockProps != null && materialTags.beacon() && variantBlockProps.beacon()) {
-                builder(BlockTags.BEACON_BASE_BLOCKS).add(block.builtInRegistryHolder().key());
+                builder(BlockTags.BEACON_BASE_BLOCKS).addOptional(block.builtInRegistryHolder().key());
             }
         }
     }

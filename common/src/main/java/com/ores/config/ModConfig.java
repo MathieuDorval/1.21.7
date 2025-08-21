@@ -164,6 +164,36 @@ public class ModConfig {
         return false;
     }
 
+    public static boolean isVariantEnabled(String variantId) {
+        if (variantId.contains(":")) {
+            variantId = variantId.substring(variantId.indexOf(":") + 1);
+        }
+
+        if (VANILLA_EXCLUSIONS.contains(variantId)) {
+            return false;
+        }
+
+        boolean isDatagen = System.getProperty("fabric-api.datagen") != null;
+        if (DEBUG_MODE || isDatagen) {
+            return true;
+        }
+
+        if (TO_GENERATE.contains(variantId)) {
+            return true;
+        }
+
+        for (Materials material : Materials.values()) {
+            for (Variants variant : Variants.values()) {
+                String id = variant.getFormattedId(material.getId());
+                if (id.equals(variantId)) {
+                    return isVariantEnabled(material, variant);
+                }
+            }
+        }
+
+        return false;
+    }
+
     public static boolean isOreVariantEnabled(String variantName) {
         boolean isDatagen = System.getProperty("fabric-api.datagen") != null;
         if (DEBUG_MODE || isDatagen) {

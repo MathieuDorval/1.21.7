@@ -15,5 +15,6 @@ public final class ORESModFabric implements ModInitializer {
     public void onInitialize() {
         ORESMod.initialize();
         ModFuels.registerAll();
+        FabricLootDrops.register();
     }
 }

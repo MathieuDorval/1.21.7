@@ -51,11 +51,11 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
         Variants.Category category = variant.getCategory();
 
         if (category == Variants.Category.ORE || category == Variants.Category.FALLING_ORE || category == Variants.Category.INVERTED_FALLING_ORE) {
-            builder(materialOresTag).add(item.builtInRegistryHolder().key());
+            builder(materialOresTag).addOptional(item.builtInRegistryHolder().key());
         } else {
             TagKey<Item> variantItemsTag = createModTag(variant.name().toLowerCase() + "_items");
-            builder(materialItemsTag).add(item.builtInRegistryHolder().key());
-            builder(variantItemsTag).add(item.builtInRegistryHolder().key());
+            builder(materialItemsTag).addOptional(item.builtInRegistryHolder().key());
+            builder(variantItemsTag).addOptional(item.builtInRegistryHolder().key());
         }
     }
 
@@ -67,23 +67,23 @@ public class ModItemTagProvider extends FabricTagProvider<Item> {
 
         // === BEACON MATERIAL ===
         if (materialTags.beacon() && variantProps.beacon()) {
-            builder(ItemTags.BEACON_PAYMENT_ITEMS).add(item.builtInRegistryHolder().key());
+            builder(ItemTags.BEACON_PAYMENT_ITEMS).addOptional(item.builtInRegistryHolder().key());
         }
         // === PIGLIN REPELLENTS ===
         if (materialTags.piglinRepellents() && variantProps.piglinRepellents()) {
-            builder(ItemTags.PIGLIN_REPELLENTS).add(item.builtInRegistryHolder().key());
+            builder(ItemTags.PIGLIN_REPELLENTS).addOptional(item.builtInRegistryHolder().key());
         }
         // === PIGLIN LOVED ===
         if (materialTags.piglinLoved() && variantProps.piglinLoved()) {
-            builder(ItemTags.PIGLIN_LOVED).add(item.builtInRegistryHolder().key());
+            builder(ItemTags.PIGLIN_LOVED).addOptional(item.builtInRegistryHolder().key());
         }
         // === PIGLIN FOOD ===
         if (materialTags.piglinFood() && variantProps.piglinFood()) {
-            builder(ItemTags.PIGLIN_FOOD).add(item.builtInRegistryHolder().key());
+            builder(ItemTags.PIGLIN_FOOD).addOptional(item.builtInRegistryHolder().key());
         }
         // === TRIM MATERIALS ===
         if (materialTags.trimMaterial() && variantProps.trimable()) {
-            builder(ItemTags.TRIM_MATERIALS).add(item.builtInRegistryHolder().key());
+            builder(ItemTags.TRIM_MATERIALS).addOptional(item.builtInRegistryHolder().key());
         }
     }
 
