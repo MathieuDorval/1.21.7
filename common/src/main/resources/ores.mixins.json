@@ -4,6 +4,7 @@
   "package": "com.ores.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
+    "CustomOreGenerationMixin",
     "LootTableMixin",
     "OreFeatureMixin",
     "OreVeinFeatureMixin"

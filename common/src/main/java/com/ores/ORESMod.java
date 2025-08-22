@@ -1,6 +1,7 @@
 package com.ores;
 
 import com.ores.config.ModConfig;
+import com.ores.config.ModOreGenConfig;
 import com.ores.registries.ModBlocks;
 import com.ores.registries.ModCreativeTab;
 import com.ores.registries.ModItems;
@@ -17,6 +18,7 @@ public final class ORESMod {
     public static void initialize() {
         LOGGER.info("Initializing ORES Mod...");
         ModConfig.initialize();
+        ModOreGenConfig.initialize();
         ModCreativeTab.initialize();
         ModBlocks.initialize();
         ModItems.initialize();
