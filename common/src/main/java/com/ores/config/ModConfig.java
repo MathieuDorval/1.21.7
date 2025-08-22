@@ -100,21 +100,42 @@ public class ModConfig {
 
             for (String line : lines) {
                 line = line.trim();
+                if (line.startsWith("#") || line.isEmpty()) {
+                    continue;
+                }
+
                 if (line.equalsIgnoreCase("debug = true")) {
                     DEBUG_MODE = true;
                 }
+
                 if (line.startsWith("[") && line.endsWith("]")) {
                     currentSection = line.substring(1, line.length() - 1);
                     continue;
                 }
+
                 if (line.contains("=")) {
                     String[] parts = line.split("=", 2);
                     String key = parts[0].trim();
-                    boolean value = Boolean.parseBoolean(parts[1].trim());
+                    String valueStr = parts[1].trim();
+
                     switch (currentSection) {
-                        case "materials" -> MATERIAL_SETTINGS.put(key, value);
-                        case "specific_variants" -> SPECIFIC_VARIANT_SETTINGS.put(key, value);
-                        case "ore_variants" -> ORE_GENERATION_SETTINGS.put(key, value);
+                        case "materials" -> MATERIAL_SETTINGS.put(key, Boolean.parseBoolean(valueStr));
+                        case "specific_variants" -> SPECIFIC_VARIANT_SETTINGS.put(key, Boolean.parseBoolean(valueStr));
+                        case "ore_variants" -> ORE_GENERATION_SETTINGS.put(key, Boolean.parseBoolean(valueStr));
+                        case "custom_item" -> {
+                            if ("generate".equals(key) && valueStr.startsWith("[") && valueStr.endsWith("]")) {
+                                String listContent = valueStr.substring(1, valueStr.length() - 1).trim();
+                                if (!listContent.isEmpty()) {
+                                    String[] items = listContent.split(",");
+                                    for (String item : items) {
+                                        String idToGenerate = item.trim().replace("\"", "");
+                                        if (VALID_IDS.contains(idToGenerate) && !TO_GENERATE.contains(idToGenerate) && !VANILLA_EXCLUSIONS.contains(idToGenerate)) {
+                                            TO_GENERATE.add(idToGenerate);
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -242,6 +263,9 @@ public class ModConfig {
                 content.append(variant.name()).append(" = true\n");
             }
         }
+        content.append("\n[custom_item]\n");
+        content.append("# Add any item variant ID to this list to generate it, for example: [\"tin_ingot\", \"tin_nugget\"]\n");
+        content.append("generate = []\n");
         return content.toString();
     }
 }
