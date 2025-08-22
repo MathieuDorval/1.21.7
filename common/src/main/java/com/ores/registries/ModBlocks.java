@@ -83,6 +83,7 @@ public class ModBlocks {
     private static void registerOre(Materials material, Variants variant) {
         if (!ModConfig.isOreVariantEnabled(variant.name())) return;
         Materials.OreProps materialProps = material.getOreProps();
+        Materials.BlockProps materialBlockProps = material.getBlockProps();
         Variants.OreProps variantProps = variant.getOreProps();
         if (materialProps != null && variantProps != null) {
             String blockId = variant.getFormattedId(material.getId());
@@ -90,7 +91,7 @@ public class ModBlocks {
             UniformInt xpRange = UniformInt.of(materialProps.minXp(), materialProps.maxXp());
 
             if (materialProps.isRedstoneLike()) {
-                register(blockId, () -> new CustomRedstoneOreBlock(properties, xpRange, variantProps.mapColor().col));
+                register(blockId, () -> new CustomRedstoneOreBlock(properties, xpRange, materialBlockProps.mapColor().col));
             } else {
                 register(blockId, () -> new DropExperienceBlock(xpRange, properties));
             }
