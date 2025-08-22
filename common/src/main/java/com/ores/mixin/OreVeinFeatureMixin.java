@@ -2,6 +2,7 @@ package com.ores.mixin;
 
 import com.ores.worldgen.OreNameFilter;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
+import net.minecraft.world.level.levelgen.feature.configurations.FeatureConfiguration;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -11,22 +12,30 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 public abstract class OreVeinFeatureMixin {
 
     @Inject(method = "place", at = @At("HEAD"), cancellable = true)
-    private void ores$blockVeins(FeaturePlaceContext<?> ctx, CallbackInfoReturnable<Boolean> cir) {
-        Object cfg = ctx.config();
-        if (cfg == null) return;
+    private void ores$cancelVeins(FeaturePlaceContext<? extends FeatureConfiguration> ctx, CallbackInfoReturnable<Boolean> cir) {
+        Object config = ctx.config();
+        if (config == null) return;
+
         try {
-            for (var f : cfg.getClass().getDeclaredFields()) {
-                if (!f.getType().getName().equals("net.minecraft.world.level.block.state.BlockState")) continue;
-                f.setAccessible(true);
-                Object val = f.get(cfg);
+            for (var field : config.getClass().getDeclaredFields()) {
+                field.setAccessible(true);
+                Object val = field.get(config);
                 if (val == null) continue;
-                net.minecraft.world.level.block.state.BlockState state = (net.minecraft.world.level.block.state.BlockState) val;
-                if (OreNameFilter.shouldBlock(state.getBlock())) {
-                    cir.setReturnValue(false);
-                    return;
+
+                if (val instanceof net.minecraft.world.level.block.state.BlockState state) {
+                    if (OreNameFilter.shouldBlock(state.getBlock())) {
+                        cir.setReturnValue(false);
+                        return;
+                    }
+                } else if (val instanceof java.util.List list) {
+                    for (Object o : list) {
+                        if (o instanceof net.minecraft.world.level.block.state.BlockState s && OreNameFilter.shouldBlock(s.getBlock())) {
+                            cir.setReturnValue(false);
+                            return;
+                        }
+                    }
                 }
             }
-        } catch (Throwable ignored) {
-        }
+        } catch (Throwable ignored) {}
     }
 }
