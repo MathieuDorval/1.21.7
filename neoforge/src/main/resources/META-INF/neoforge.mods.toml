@@ -11,7 +11,8 @@ authors = "__mathieu"
 description = '''
 Unify ores
 '''
-#logoFile = ""
+[[mixins]]
+config="ores.mixins.json"
 
 [[dependencies.ores]]
 modId = "neoforge"

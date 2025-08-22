@@ -4,9 +4,6 @@ import com.ores.config.ModConfig;
 import com.ores.registries.ModBlocks;
 import com.ores.registries.ModCreativeTab;
 import com.ores.registries.ModItems;
-import com.ores.worldgen.OreGenerationStripper;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.server.level.ServerLevel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,11 +21,5 @@ public final class ORESMod {
         ModBlocks.initialize();
         ModItems.initialize();
         LOGGER.info("ORES Mod initialized successfully.");
-    }
-
-    public static void onServerStarted(MinecraftServer server) {
-        for (ServerLevel level : server.getAllLevels()) {
-            OreGenerationStripper.stripAllOreGenerations(level.registryAccess(), level);
-        }
     }
 }

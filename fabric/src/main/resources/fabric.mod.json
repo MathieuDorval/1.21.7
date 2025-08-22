@@ -24,6 +24,9 @@
       "com.ores.fabric.datagen.DataGenerator"
     ]
   },
+  "mixins": [
+    "ores.mixins.json"
+  ],
   "depends": {
     "fabricloader": ">=0.17.0",
     "minecraft": "~1.21.7",
