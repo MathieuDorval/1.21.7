@@ -1,7 +1,7 @@
 package com.ores.config;
 
 import com.ores.ORESMod;
-import com.ores.core.Materials; // Assurez-vous que l'import est correct
+import com.ores.core.Materials;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -20,14 +20,12 @@ public class ModOreGenConfig {
     private static final Path CONFIG_PATH = Paths.get("config", "ores_generation.toml");
     private static final Map<String, OreGenConfig> ORE_GENERATION_CONFIGS = new HashMap<>();
 
-    // --- STRUCTURE DE DONNÉES (MAINTENANT STATIC) ---
-
     public sealed interface OreGenConfig permits OreConfig, VeinConfig {}
 
     public record OreConfig(
             Materials ore,
             int size,
-            float density,
+            int count,
             float discardChanceOnAirExposure,
             String generationShape,
             int minHeight,
@@ -111,7 +109,7 @@ public class ModOreGenConfig {
         try {
             switch (type.toLowerCase(Locale.ROOT)) {
                 case "ore" -> {
-                    List<String> requiredKeys = List.of("ore", "size", "density", "discardChanceOnAirExposure", "generationShape", "minHeight", "maxHeight", "dimension");
+                    List<String> requiredKeys = List.of("ore", "size", "count", "discardChanceOnAirExposure", "generationShape", "minHeight", "maxHeight", "dimension");
                     validateKeys(name, params, requiredKeys);
 
                     String oreId = (String) params.get("ore");
@@ -126,7 +124,7 @@ public class ModOreGenConfig {
                     OreConfig oreConfig = new OreConfig(
                             material,
                             ((Number) params.get("size")).intValue(),
-                            ((Number) params.get("density")).floatValue(),
+                            ((Number) params.get("count")).intValue(),
                             ((Number) params.get("discardChanceOnAirExposure")).floatValue(),
                             generationShape,
                             ((Number) params.get("minHeight")).intValue(),
@@ -204,9 +202,9 @@ public class ModOreGenConfig {
                type = "ore"
                ore = "diamond"
                size = 8
-               density = 0.8
+               count = 1
                discardChanceOnAirExposure = 0.5
-               generationShape = "trapezoid" # Peut être "uniform" ou "trapezoid"
+               generationShape = "uniform" # Peut être "uniform" ou "trapezoid"
                minHeight = -64
                maxHeight = 16
                dimension = "minecraft:overworld"

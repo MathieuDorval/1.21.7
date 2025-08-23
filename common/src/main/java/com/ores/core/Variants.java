@@ -12,6 +12,11 @@ import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 public enum Variants {
     // -=-=-=- ITEMS -=-=-=-
     // === VANILLA ===
@@ -142,4 +147,19 @@ public enum Variants {
     @Nullable public ItemProps getItemProps() { return itemProps; }
     @Nullable public BlockProps getBlockProps() { return blockProps; }
     @Nullable public OreProps getOreProps() { return oreProps; }
+
+    // --- MÉTHODE DE RECHERCHE CORRIGÉE ---
+
+    private static final Map<String, Variants> BY_STONE_ID = Arrays.stream(values())
+            .filter(v -> v.getOreProps() != null && v.getOreProps().idStone() != null)
+            .collect(Collectors.toMap(v -> v.getOreProps().idStone(), v -> v, (v1, v2) -> v1));
+
+    /**
+     * Récupère une variante de minerai par l'ID de la pierre qu'elle remplace (ex: "minecraft:stone").
+     * @param stoneId L'identifiant complet de la pierre.
+     * @return Un Optional contenant la variante si elle est trouvée, sinon un Optional vide.
+     */
+    public static Optional<Variants> fromStoneId(String stoneId) {
+        return Optional.ofNullable(BY_STONE_ID.get(stoneId));
+    }
 }
