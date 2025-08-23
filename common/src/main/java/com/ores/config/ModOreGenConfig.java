@@ -36,7 +36,6 @@ public class ModOreGenConfig {
             String generationType,
             @Nullable String associatedBlock,
             @Nullable String bonusBlock,
-            // Nouvelle liste d'options facultatives
             @Nullable List<String> options
     ) {}
 
@@ -126,7 +125,7 @@ public class ModOreGenConfig {
             if ("vein".equalsIgnoreCase(generationType)) {
                 associatedBlock = (String) params.get("associated_block");
                 bonusBlock = (String) params.get("bonus_block");
-            } else { // "ore"
+            } else {
                 generationShape = (String) params.get("generation_shape");
                 if (params.containsKey("replaceable_blocks")) {
                     replaceableBlocks = (List<String>) params.get("replaceable_blocks");
@@ -207,140 +206,6 @@ public class ModOreGenConfig {
                min_height = 136
                max_height = 320
                dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_coal_lower"]
-               ore = "coal"
-               size = 17
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks at Y=96
-               min_height = 0
-               max_height = 192
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_copper"]
-               ore = "copper"
-               size = 9
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks at Y=48
-               min_height = -16
-               max_height = 112
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_iron_main"]
-               ore = "iron"
-               size = 9
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks at Y=16
-               min_height = -64
-               max_height = 72
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_iron_high"]
-               ore = "iron"
-               size = 9
-               density = 0.8
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks at Y=232
-               min_height = 80
-               max_height = 384
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_gold"]
-               ore = "gold"
-               size = 9
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "uniform"
-               min_height = -64
-               max_height = 32
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_lapis"]
-               ore = "lapis"
-               size = 7
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks at Y=0
-               min_height = -64
-               max_height = 64
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_redstone"]
-               ore = "redstone"
-               size = 8
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "uniform"
-               min_height = -64
-               max_height = 15
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_diamond"]
-               ore = "diamond"
-               size = 8
-               density = 1.0
-               discard_chance_on_air_exposure = 0.5
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks near the bottom of the world
-               min_height = -64
-               max_height = 16
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               
-               ["vanilla_emerald"]
-               ore = "emerald"
-               size = 6
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "trapezoid" # Peaks high in mountains
-               min_height = -16
-               max_height = 320
-               dimension = "minecraft:overworld"
-               generation_type = "ore"
-               biomes = ["minecraft:windswept_hills", "minecraft:windswept_forest", "minecraft:windswept_gravelly_hills", "minecraft:stony_peaks", "minecraft:snowy_slopes", "minecraft:meadow", "minecraft:grove", "minecraft:jagged_peaks", "minecraft:frozen_peaks"]
-               
-               # --- NETHER ORES ---
-               ["vanilla_nether_quartz"]
-               ore = "quartz"
-               size = 10
-               density = 1.0
-               discard_chance_on_air_exposure = 0.0
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "uniform"
-               min_height = 10
-               max_height = 118
-               dimension = "minecraft:the_nether"
-               generation_type = "ore"
-               
-               ["vanilla_nether_gold"]
-               ore = "gold"
-               size = 10
-               density = 1.0
-               discard_chance_on_air_exposure = 0.0
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "uniform"
-               min_height = 10
-               max_height = 118
-               dimension = "minecraft:the_nether"
                generation_type = "ore"
                """;
     }
