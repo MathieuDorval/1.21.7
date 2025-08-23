@@ -11,6 +11,12 @@ import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Arrays;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 public enum Materials {
 
     // -=-=-=- ENUM VALUES -=-=-=-
@@ -131,4 +137,10 @@ public enum Materials {
     public BlockProps getBlockProps() { return blockProps; }
     public OreProps getOreProps() { return oreProps; }
     public Tags getTags() { return tags; }
+
+    private static final Map<String, Materials> BY_ID = Arrays.stream(values())
+            .collect(Collectors.toMap(Materials::getId, e -> e));
+    public static Optional<Materials> fromId(String id) {
+        return Optional.ofNullable(BY_ID.get(id.toLowerCase(Locale.ROOT)));
+    }
 }

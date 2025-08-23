@@ -1,54 +1,60 @@
 package com.ores.config;
 
 import com.ores.ORESMod;
+import com.ores.core.Materials; // Assurez-vous que l'import est correct
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
+import java.util.stream.Collectors;
 
+/**
+ * Classe de gestion de la configuration de génération des minerais.
+ * Permet de lire et stocker le contenu de config/ores_generation.toml
+ */
 public class ModOreGenConfig {
 
     private static final Path CONFIG_PATH = Paths.get("config", "ores_generation.toml");
-    private static final Map<String, OreGenParams> ORE_GENERATION_CONFIGS = new HashMap<>();
+    private static final Map<String, OreGenConfig> ORE_GENERATION_CONFIGS = new HashMap<>();
 
-    /**
-     * Représente les paramètres de génération pour un seul type de minerai.
-     */
-    public record OreGenParams(
-            String ore,
+    // --- STRUCTURE DE DONNÉES (MAINTENANT STATIC) ---
+
+    public sealed interface OreGenConfig permits OreConfig, VeinConfig {}
+
+    public record OreConfig(
+            Materials ore,
             int size,
             float density,
             float discardChanceOnAirExposure,
-            float discardChanceOnLiquidExposure,
-            @Nullable String generationShape,
+            String generationShape,
             int minHeight,
             int maxHeight,
             String dimension,
             @Nullable List<String> biomes,
-            @Nullable List<String> replaceableBlocks,
-            String generationType,
-            @Nullable String associatedBlock,
-            @Nullable String bonusBlock,
-            @Nullable List<String> options
-    ) {}
+            @Nullable List<String> replaceableBlocks
+    ) implements OreGenConfig {}
+
+    public record VeinConfig(
+            String ore,
+            String associatedBlock,
+            String bonusBlock,
+            int minHeight,
+            int maxHeight
+    ) implements OreGenConfig {}
+
 
     /**
-     * Initialise la configuration, crée le fichier si nécessaire et le charge.
+     * Initialise la configuration : crée le fichier si besoin et charge son contenu.
      */
     public static void initialize() {
         try {
             if (Files.notExists(CONFIG_PATH)) {
-                ORESMod.LOGGER.info("Creating default ore generation config file at {}...", CONFIG_PATH.toString());
+                ORESMod.LOGGER.info("Creating default ore generation config file at {}...", CONFIG_PATH);
                 Files.createDirectories(CONFIG_PATH.getParent());
-                String defaultConfig = generateDefaultTomlContent();
-                Files.writeString(CONFIG_PATH, defaultConfig);
+                Files.writeString(CONFIG_PATH, generateDefaultTomlContent());
             }
             loadConfig();
         } catch (IOException e) {
@@ -57,36 +63,34 @@ public class ModOreGenConfig {
     }
 
     /**
-     * Charge les configurations depuis le fichier ores_generation.toml.
+     * Charge les configurations depuis ores_generation.toml
      */
     private static void loadConfig() {
         ORE_GENERATION_CONFIGS.clear();
         try {
             List<String> lines = Files.readAllLines(CONFIG_PATH);
-            Map<String, Object> currentOreParams = null;
-            String currentOreGenName = null;
+            Map<String, Object> currentSectionParams = null;
+            String currentSectionName = null;
 
-            for (String line : lines) {
-                line = line.trim();
-                if (line.startsWith("#") || line.isEmpty()) {
-                    continue;
-                }
+            for (String raw : lines) {
+                String line = raw.trim();
+                if (line.isEmpty() || line.startsWith("#")) continue;
 
                 if (line.startsWith("[") && line.endsWith("]")) {
-                    if (currentOreGenName != null && currentOreParams != null) {
-                        buildAndStoreParams(currentOreGenName, currentOreParams);
+                    if (currentSectionName != null && currentSectionParams != null) {
+                        buildAndStoreParams(currentSectionName, currentSectionParams);
                     }
-                    currentOreGenName = line.substring(1, line.length() - 1).replace("\"", "");
-                    currentOreParams = new HashMap<>();
-                } else if (currentOreParams != null && line.contains("=")) {
+                    currentSectionName = line.substring(1, line.length() - 1).replace("\"", "");
+                    currentSectionParams = new HashMap<>();
+                } else if (currentSectionParams != null && line.contains("=")) {
                     String[] parts = line.split("=", 2);
                     String key = parts[0].trim();
                     String valueStr = parts[1].trim();
-                    currentOreParams.put(key, parseValue(valueStr));
+                    currentSectionParams.put(key, parseValue(valueStr));
                 }
             }
-            if (currentOreGenName != null && currentOreParams != null) {
-                buildAndStoreParams(currentOreGenName, currentOreParams);
+            if (currentSectionName != null && currentSectionParams != null) {
+                buildAndStoreParams(currentSectionName, currentSectionParams);
             }
 
         } catch (IOException e) {
@@ -95,126 +99,135 @@ public class ModOreGenConfig {
     }
 
     /**
-     * Valide, construit et stocke un objet OreGenParams à partir des données parsées.
+     * Construit un objet de configuration (OreConfig ou VeinConfig) et le stocke.
      */
     private static void buildAndStoreParams(String name, Map<String, Object> params) {
-        String generationType = (String) params.get("generation_type");
-        if (generationType == null) {
-            ORESMod.LOGGER.error("Skipping ore generation '{}': Missing required parameter 'generation_type'.", name);
+        String type = (String) params.get("type");
+        if (type == null) {
+            ORESMod.LOGGER.error("Skipping config section '{}': Missing required parameter 'type'. It must be 'ore' or 'vein'.", name);
             return;
         }
 
-        List<String> requiredKeys = new ArrayList<>(List.of("ore", "size", "density", "discard_chance_on_air_exposure", "discard_chance_on_liquid_exposure", "min_height", "max_height", "dimension"));
-        if ("ore".equalsIgnoreCase(generationType)) {
-            requiredKeys.add("generation_shape");
-        }
-
-        for (String key : requiredKeys) {
-            if (!params.containsKey(key)) {
-                ORESMod.LOGGER.error("Skipping ore generation '{}': Missing required parameter '{}' for generation_type '{}'.", name, key, generationType);
-                return;
-            }
-        }
-
         try {
-            String associatedBlock = null;
-            String bonusBlock = null;
-            String generationShape = null;
-            List<String> replaceableBlocks = null;
+            switch (type.toLowerCase(Locale.ROOT)) {
+                case "ore" -> {
+                    List<String> requiredKeys = List.of("ore", "size", "density", "discardChanceOnAirExposure", "generationShape", "minHeight", "maxHeight", "dimension");
+                    validateKeys(name, params, requiredKeys);
 
-            if ("vein".equalsIgnoreCase(generationType)) {
-                associatedBlock = (String) params.get("associated_block");
-                bonusBlock = (String) params.get("bonus_block");
-            } else {
-                generationShape = (String) params.get("generation_shape");
-                if (params.containsKey("replaceable_blocks")) {
-                    replaceableBlocks = (List<String>) params.get("replaceable_blocks");
+                    String oreId = (String) params.get("ore");
+                    Materials material = Materials.fromId(oreId)
+                            .orElseThrow(() -> new IllegalArgumentException("Unknown material for type 'ore': '" + oreId + "'. Please use a valid ID from the Materials enum."));
+
+                    String generationShape = (String) params.get("generationShape");
+                    if (!("uniform".equalsIgnoreCase(generationShape) || "trapezoid".equalsIgnoreCase(generationShape))) {
+                        throw new IllegalArgumentException("Parameter 'generationShape' must be 'uniform' or 'trapezoid'.");
+                    }
+
+                    OreConfig oreConfig = new OreConfig(
+                            material,
+                            ((Number) params.get("size")).intValue(),
+                            ((Number) params.get("density")).floatValue(),
+                            ((Number) params.get("discardChanceOnAirExposure")).floatValue(),
+                            generationShape,
+                            ((Number) params.get("minHeight")).intValue(),
+                            ((Number) params.get("maxHeight")).intValue(),
+                            (String) params.get("dimension"),
+                            (List<String>) params.get("biomes"),
+                            (List<String>) params.get("replaceableBlocks")
+                    );
+                    ORE_GENERATION_CONFIGS.put(name, oreConfig);
+                    ORESMod.LOGGER.info("Loaded 'ore' config for: {}", name);
                 }
-            }
+                case "vein" -> {
+                    List<String> requiredKeys = List.of("ore", "associatedBlock", "bonus_block", "minHeight", "maxHeight");
+                    validateKeys(name, params, requiredKeys);
 
-            OreGenParams genParams = new OreGenParams(
-                    (String) params.get("ore"),
-                    ((Number) params.get("size")).intValue(),
-                    ((Number) params.get("density")).floatValue(),
-                    ((Number) params.get("discard_chance_on_air_exposure")).floatValue(),
-                    ((Number) params.get("discard_chance_on_liquid_exposure")).floatValue(),
-                    generationShape,
-                    ((Number) params.get("min_height")).intValue(),
-                    ((Number) params.get("max_height")).intValue(),
-                    (String) params.get("dimension"),
-                    params.containsKey("biomes") ? (List<String>) params.get("biomes") : null,
-                    replaceableBlocks,
-                    generationType,
-                    associatedBlock,
-                    bonusBlock,
-                    params.containsKey("options") ? (List<String>) params.get("options") : null
-            );
-            ORE_GENERATION_CONFIGS.put(name, genParams);
-            ORESMod.LOGGER.info("Loaded ore generation config for: {}", name);
+                    VeinConfig veinConfig = new VeinConfig(
+                            (String) params.get("ore"),
+                            (String) params.get("associatedBlock"),
+                            (String) params.get("bonus_block"),
+                            ((Number) params.get("minHeight")).intValue(),
+                            ((Number) params.get("maxHeight")).intValue()
+                    );
+                    ORE_GENERATION_CONFIGS.put(name, veinConfig);
+                    ORESMod.LOGGER.info("Loaded 'vein' config for: {}", name);
+                }
+                default -> ORESMod.LOGGER.error("Skipping config section '{}': Unknown type '{}'. Must be 'ore' or 'vein'.", name, type);
+            }
         } catch (Exception e) {
-            ORESMod.LOGGER.error("Failed to parse ore generation parameters for '{}'. Please check the config format and data types.", name, e);
+            ORESMod.LOGGER.error("Failed to parse parameters for config section '{}'. Error: {}", name, e.getMessage());
         }
     }
 
-    /**
-     * Analyse une valeur de chaîne de caractères du TOML et la convertit dans le type approprié.
-     */
+    private static void validateKeys(String sectionName, Map<String, Object> params, List<String> requiredKeys) {
+        List<String> missingKeys = requiredKeys.stream()
+                .filter(key -> !params.containsKey(key))
+                .toList();
+
+        if (!missingKeys.isEmpty()) {
+            throw new IllegalArgumentException(String.format("Section '%s' is missing required parameters: %s", sectionName, missingKeys));
+        }
+    }
+
     private static Object parseValue(String valueStr) {
         valueStr = valueStr.trim();
         if (valueStr.startsWith("[") && valueStr.endsWith("]")) {
             String content = valueStr.substring(1, valueStr.length() - 1).trim();
-            if (content.isEmpty()) {
-                return new ArrayList<String>();
-            }
-            String[] items = content.split(",");
-            List<String> list = new ArrayList<>();
-            for (String item : items) {
-                list.add(item.trim().replace("\"", ""));
-            }
-            return list;
+            if (content.isEmpty()) return new ArrayList<String>();
+            return Arrays.stream(content.split(","))
+                    .map(item -> item.trim().replace("\"", ""))
+                    .collect(Collectors.toList());
         }
         if (valueStr.startsWith("\"") && valueStr.endsWith("\"")) {
             return valueStr.substring(1, valueStr.length() - 1);
         }
-        if ("true".equalsIgnoreCase(valueStr) || "false".equalsIgnoreCase(valueStr)) {
-            return Boolean.parseBoolean(valueStr);
-        }
         if (valueStr.contains(".")) {
-            return Float.parseFloat(valueStr);
+            try { return Float.parseFloat(valueStr); } catch (NumberFormatException ignored) {}
         }
-        try {
-            return Integer.parseInt(valueStr);
-        } catch (NumberFormatException e) {
-            return valueStr;
-        }
+        try { return Integer.parseInt(valueStr); } catch (NumberFormatException ignored) {}
+        return valueStr;
     }
 
     /**
-     * Génère le contenu par défaut pour le fichier ores_generation.toml.
+     * Génère le contenu du fichier de configuration par défaut avec des exemples pour chaque type.
      */
     private static String generateDefaultTomlContent() {
         return """
-               # ORES Mod - Ore Generation Configuration
-               # --- OVERWORLD ORES ---
-               ["vanilla_coal_upper"]
-               ore = "coal"
-               size = 17
-               density = 1.0
-               discard_chance_on_air_exposure = 0.2
-               discard_chance_on_liquid_exposure = 0.0
-               generation_shape = "uniform"
-               min_height = 136
-               max_height = 320
+               # Fichier de configuration pour la génération des minerais du mod ORES.
+               # NOTE : Vous devez spécifier le namespace (ex: "minecraft:stone", "ores:tin_ore") pour tous les
+               # identifiants de blocs, dimensions, biomes, etc.
+               
+               # --- EXEMPLE DE TYPE "ore" ---
+               # Le champ 'ore' doit correspondre à un 'id' de l'enum Materials (ex: "diamond", "tin"). Il n'a JAMAIS de namespace.
+               # Le champ 'dimension' et les listes 'biomes'/'replaceableBlocks' DOIVENT avoir un namespace.
+               ["vanilla_diamond_deepslate"]
+               type = "ore"
+               ore = "diamond"
+               size = 8
+               density = 0.8
+               discardChanceOnAirExposure = 0.5
+               generationShape = "trapezoid" # Peut être "uniform" ou "trapezoid"
+               minHeight = -64
+               maxHeight = 16
                dimension = "minecraft:overworld"
-               generation_type = "ore"
+
+               # Paramètres facultatifs
+               # biomes = ["minecraft:deep_dark", "minecraft:dripstone_caves"]
+               # replaceableBlocks = ["minecraft:deepslate", "minecraft:tuff"]
+
+               # --- EXEMPLE DE TYPE "vein" ---
+               # Tous les champs de type bloc ('ore', 'associatedBlock', 'bonus_block') DOIVENT avoir un namespace.
+               ["custom_tin_vein"]
+               type = "vein"
+               ore = "ores:andesite_tin_ore"
+               associatedBlock = "minecraft:andesite"
+               bonus_block = "ores:raw_tin_block"
+               minHeight = 0
+               maxHeight = 64
                """;
     }
 
-    /**
-     * Permet d'accéder aux configurations de génération de minerais chargées.
-     * @return Une map immuable des configurations.
-     */
-    public static Map<String, OreGenParams> getOreGenerationConfigs() {
+    public static Map<String, OreGenConfig> getOreGenerationConfigs() {
         return Collections.unmodifiableMap(ORE_GENERATION_CONFIGS);
     }
 }

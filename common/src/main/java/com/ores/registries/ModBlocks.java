@@ -1,7 +1,3 @@
-/**
- * ORES MOD | __mathieu
- * Handles the dynamic registration of all mod blocks based on configuration.
- */
 package com.ores.registries;
 
 import com.ores.ORESMod;
@@ -29,6 +25,9 @@ public class ModBlocks {
     // -=-=-=- REGISTRY -=-=-=-
     public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(ORESMod.MOD_ID, Registries.BLOCK);
     public static final Map<String, RegistrySupplier<Block>> DYNAMIC_BLOCKS = new HashMap<>();
+    // Ajout de la map pour la génération de monde
+    public static final Map<Variants, Map<Materials, RegistrySupplier<Block>>> ORES_MAP = new HashMap<>();
+
 
     // -=-=-=- INITIALIZATION -=-=-=-
     public static void initialize() {
@@ -90,11 +89,14 @@ public class ModBlocks {
             BlockBehaviour.Properties properties = buildOreProperties(blockId, materialProps, variantProps);
             UniformInt xpRange = UniformInt.of(materialProps.minXp(), materialProps.maxXp());
 
+            Supplier<Block> blockSupplier;
             if (materialProps.isRedstoneLike()) {
-                register(blockId, () -> new CustomRedstoneOreBlock(properties, xpRange, materialBlockProps.mapColor().col));
+                blockSupplier = () -> new CustomRedstoneOreBlock(properties, xpRange, materialBlockProps.mapColor().col);
             } else {
-                register(blockId, () -> new DropExperienceBlock(xpRange, properties));
+                blockSupplier = () -> new DropExperienceBlock(xpRange, properties);
             }
+            RegistrySupplier<Block> registeredBlock = register(blockId, blockSupplier);
+            ORES_MAP.computeIfAbsent(variant, k -> new HashMap<>()).put(material, registeredBlock);
         }
     }
 
@@ -108,11 +110,14 @@ public class ModBlocks {
             BlockBehaviour.Properties properties = buildOreProperties(blockId, materialProps, variantProps);
             UniformInt xpRange = UniformInt.of(materialProps.minXp(), materialProps.maxXp());
 
+            Supplier<Block> blockSupplier;
             if (materialProps.isRedstoneLike()) {
-                register(blockId, () -> new CustomFallingRedstoneOreBlock(properties, xpRange, materialBlockProps.mapColor().col));
+                blockSupplier = () -> new CustomFallingRedstoneOreBlock(properties, xpRange, materialBlockProps.mapColor().col);
             } else {
-                register(blockId, () -> new CustomFallingOreBlock(properties, xpRange));
+                blockSupplier = () -> new CustomFallingOreBlock(properties, xpRange);
             }
+            RegistrySupplier<Block> registeredBlock = register(blockId, blockSupplier);
+            ORES_MAP.computeIfAbsent(variant, k -> new HashMap<>()).put(material, registeredBlock);
         }
     }
 
@@ -124,13 +129,17 @@ public class ModBlocks {
             String blockId = variant.getFormattedId(material.getId());
             BlockBehaviour.Properties properties = buildOreProperties(blockId, materialProps, variantProps);
             UniformInt xpRange = UniformInt.of(materialProps.minXp(), materialProps.maxXp());
-            register(blockId, () -> new CustomInvertedFallingOreBlock(properties, xpRange));
+
+            Supplier<Block> blockSupplier = () -> new CustomInvertedFallingOreBlock(properties, xpRange);
+            RegistrySupplier<Block> registeredBlock = register(blockId, blockSupplier);
+            ORES_MAP.computeIfAbsent(variant, k -> new HashMap<>()).put(material, registeredBlock);
         }
     }
 
-    private static void register(String name, Supplier<Block> blockSupplier) {
+    private static RegistrySupplier<Block> register(String name, Supplier<Block> blockSupplier) {
         RegistrySupplier<Block> registeredBlock = BLOCKS.register(ResourceLocation.fromNamespaceAndPath(ORESMod.MOD_ID, name), blockSupplier);
         DYNAMIC_BLOCKS.put(name, registeredBlock);
+        return registeredBlock;
     }
 
     // -=-=-=- PROPERTY BUILDERS -=-=-=-
