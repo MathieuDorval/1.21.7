@@ -6,7 +6,8 @@
   "mixins": [
     "LootTableMixin",
     "OreFeatureMixin",
-    "OreVeinifierMixin"
+    "OreVeinifierMixin",
+    "RecipeMixin"
   ],
   "injectors": {
     "defaultRequire": 1
