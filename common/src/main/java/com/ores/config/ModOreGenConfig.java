@@ -190,19 +190,13 @@ public class ModOreGenConfig {
      * Génère le contenu du fichier de configuration par défaut avec des exemples pour chaque type.
      */
     private static String generateDefaultTomlContent() {
-        return """
-               # Fichier de configuration pour la génération des minerais du mod ORES.
-               # NOTE : Vous devez spécifier le namespace (ex: "minecraft:stone", "ores:tin_ore") pour tous les
-               # identifiants de blocs, dimensions, biomes, etc.
-               
+        return """             
                # --- EXEMPLE DE TYPE "ore" ---
-               # Le champ 'ore' doit correspondre à un 'id' de l'enum Materials (ex: "diamond", "tin"). Il n'a JAMAIS de namespace.
-               # Le champ 'dimension' et les listes 'biomes'/'replaceableBlocks' DOIVENT avoir un namespace.
                ["vanilla_diamond_deepslate"]
                type = "ore"
                ore = "diamond"
-               size = 8
-               count = 1
+               size = 4
+               count = 5
                discardChanceOnAirExposure = 0.5
                generationShape = "uniform" # Peut être "uniform" ou "trapezoid"
                minHeight = -64
