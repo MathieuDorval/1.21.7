@@ -32,7 +32,6 @@ public class LootTableMixin {
         };
         instance.addRandomItems(newConsumer, lootContext);
     }
-
     @Unique
     private Item ores$getReplacement(Item original) {
         ResourceLocation originalId = BuiltInRegistries.ITEM.getKey(original);
@@ -41,9 +40,7 @@ public class LootTableMixin {
         if (originalId.getNamespace().equals("ores")) {
             return original;
         }
-
         ResourceLocation oresId = ResourceLocation.fromNamespaceAndPath("ores", originalId.getPath());
-
         Optional<Holder.Reference<Item>> holderOpt = BuiltInRegistries.ITEM.get(oresId);
         if (holderOpt.isPresent()) {
             Item candidate = holderOpt.get().value();
@@ -51,7 +48,6 @@ public class LootTableMixin {
                 return candidate;
             }
         }
-
         return original;
     }
 }
