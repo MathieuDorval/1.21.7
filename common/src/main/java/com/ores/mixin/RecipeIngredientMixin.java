@@ -17,7 +17,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Mixin(Ingredient.class)
-public abstract class RecipeMixin {
+public abstract class RecipeIngredientMixin {
 
     @ModifyVariable(
             method = "<init>(Lnet/minecraft/core/HolderSet;)V",

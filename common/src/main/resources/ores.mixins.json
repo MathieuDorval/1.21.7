@@ -7,7 +7,9 @@
     "LootTableMixin",
     "OreFeatureMixin",
     "OreVeinifierMixin",
-    "RecipeMixin"
+    "RecipeIngredientMixin",
+    "ShapedRecipeResultMixin",
+    "ShapelessRecipeResultMixin"
   ],
   "injectors": {
     "defaultRequire": 1
