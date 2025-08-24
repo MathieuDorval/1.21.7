@@ -11,6 +11,7 @@ import com.ores.core.Variants;
 import com.ores.registries.ModItems;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;
@@ -24,6 +25,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -96,7 +98,7 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
                         var unlockCriterion = this.has(oreTag);
                         HolderSet.Named<Item> oreTagHolderSet = itemHolderGetter.getOrThrow(oreTag);
                         Ingredient oreIngredient = Ingredient.of(oreTagHolderSet);
-                        generateCookingRecipesByTag(this.output, material.getId() + "_ores", oreIngredient, outputItem, 200, 100, unlockCriterion);
+                        generateCookingRecipesByTag(this.output, material.getId() + "_ores", oreIngredient, outputItem, unlockCriterion);
                     });
                     for (Variants variant : List.of(Variants.RAW, Variants.RAW_BLOCK)) {
                         findItemForRecipe(material, variant).ifPresent(inputItem -> {
@@ -119,7 +121,23 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
     }
 
     // -=-=-=- DATAGEN UTILS -=-=-=-
+    /**
+     * Checks if all items provided are from the vanilla "minecraft" namespace.
+     * @param items The items to check.
+     * @return true if all items are vanilla, false otherwise.
+     */
+    private boolean isVanillaOnlyRecipe(Item... items) {
+        return Arrays.stream(items).allMatch(item ->
+                "minecraft".equals(BuiltInRegistries.ITEM.getKey(item).getNamespace())
+        );
+    }
+
     private void generateStorageRecipes(RecipeOutput exporter, RecipeCategory category, Item smallItem, Item largeItem, HolderGetter<Item> itemHolderGetter) {
+        // Do not generate recipes if all items are vanilla.
+        if (isVanillaOnlyRecipe(smallItem, largeItem)) {
+            return;
+        }
+
         ShapelessRecipeBuilder.shapeless(itemHolderGetter, category, smallItem, 9)
                 .requires(largeItem)
                 .unlockedBy(getHasName(largeItem), inventoryTrigger(ItemPredicate.Builder.item().of(itemHolderGetter, largeItem).build()))
@@ -134,6 +152,11 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
     }
 
     private void generateCookingRecipes(RecipeOutput exporter, String inputId, Item input, Item output, int smeltingTime, int blastingTime, net.minecraft.advancements.Criterion<?> unlockCriterion) {
+        // Do not generate recipes if all items are vanilla.
+        if (isVanillaOnlyRecipe(input, output)) {
+            return;
+        }
+
         String smeltingPath = getItemName(output) + "_from_smelting_" + inputId;
         String blastingPath = getItemName(output) + "_from_blasting_" + inputId;
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(input), RecipeCategory.MISC, output, 0.7f, smeltingTime)
@@ -144,13 +167,14 @@ public class ModRecipeProvider extends RecipeProvider.Runner {
                 .save(exporter, ORESMod.MOD_ID + ":" + blastingPath);
     }
 
-    private void generateCookingRecipesByTag(RecipeOutput exporter, String inputId, Ingredient input, Item output, int smeltingTime, int blastingTime, net.minecraft.advancements.Criterion<?> unlockCriterion) {
+    private void generateCookingRecipesByTag(RecipeOutput exporter, String inputId, Ingredient input, Item output, Criterion<?> unlockCriterion) {
+        // This method is for smelting custom ore tags, so we don't need the vanilla check here.
         String smeltingPath = getItemName(output) + "_from_smelting_" + inputId;
         String blastingPath = getItemName(output) + "_from_blasting_" + inputId;
-        SimpleCookingRecipeBuilder.smelting(input, RecipeCategory.MISC, output, 0.7f, smeltingTime)
+        SimpleCookingRecipeBuilder.smelting(input, RecipeCategory.MISC, output, 0.7f, 200)
                 .unlockedBy("has_" + inputId, unlockCriterion)
                 .save(exporter, ORESMod.MOD_ID + ":" + smeltingPath);
-        SimpleCookingRecipeBuilder.blasting(input, RecipeCategory.MISC, output, 0.7f, blastingTime)
+        SimpleCookingRecipeBuilder.blasting(input, RecipeCategory.MISC, output, 0.7f, 100)
                 .unlockedBy("has_" + inputId, unlockCriterion)
                 .save(exporter, ORESMod.MOD_ID + ":" + blastingPath);
     }
