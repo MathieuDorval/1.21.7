@@ -9,7 +9,8 @@
     "OreVeinifierMixin",
     "RecipeIngredientMixin",
     "ShapedRecipeResultMixin",
-    "ShapelessRecipeResultMixin"
+    "ShapelessRecipeResultMixin",
+    "SingleItemRecipeResultMixin"
   ],
   "injectors": {
     "defaultRequire": 1

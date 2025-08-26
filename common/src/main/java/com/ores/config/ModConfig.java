@@ -27,7 +27,7 @@ public class ModConfig {
     public static final List<String> TO_GENERATE = new ArrayList<>();
     public static final List<String> VANILLA_EXCLUSIONS = List.of(
             "coal", "raw_iron", "raw_gold", "diamond", "emerald", "lapis", "lapis_lazuli", "netherite_scrap", "quartz",
-            "iron_ingot", "gold_ingot", "copper_ingot", "netherite_ingot",
+            "iron_ingot", "gold_ingot", "netherite_ingot",
             "iron_nugget", "gold_nugget",
             "raw_iron_block", "raw_copper_block", "raw_gold_block",
             "coal_block", "iron_block", "gold_block", "copper_block", "diamond_block", "emerald_block", "lapis_block", "netherite_block", "quartz_block", "redstone_block"
