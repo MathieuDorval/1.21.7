@@ -117,8 +117,8 @@ public class ModOreGenConfig {
                             .orElseThrow(() -> new IllegalArgumentException("Unknown material for type 'ore': '" + oreId + "'. Please use a valid ID from the Materials enum."));
 
                     String generationShape = (String) params.get("generationShape");
-                    if (!("uniform".equalsIgnoreCase(generationShape) || "trapezoid".equalsIgnoreCase(generationShape))) {
-                        throw new IllegalArgumentException("Parameter 'generationShape' must be 'uniform' or 'trapezoid'.");
+                    if (!("uniform".equalsIgnoreCase(generationShape) || "triangle".equalsIgnoreCase(generationShape))) {
+                        throw new IllegalArgumentException("Parameter 'generationShape' must be 'uniform' or 'triangle'.");
                     }
 
                     OreConfig oreConfig = new OreConfig(
@@ -196,9 +196,9 @@ public class ModOreGenConfig {
                type = "ore"
                ore = "diamond"
                size = 4
-               count = 5
+               count = 50
                discardChanceOnAirExposure = 0.5
-               generationShape = "uniform" # Peut être "uniform" ou "trapezoid"
+               generationShape = "uniform" # Peut être "uniform" ou "triangle"
                minHeight = -64
                maxHeight = 16
                dimension = "minecraft:overworld"

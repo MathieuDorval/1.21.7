@@ -14,6 +14,6 @@ public final class ORESModFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         ORESMod.initialize();
-        ModFuels.registerAll();
+        ModFuels.initialize();
     }
 }

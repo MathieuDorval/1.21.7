@@ -41,7 +41,7 @@ public class ModFuels {
         }
     }
 
-    public static void registerAll() {
+    public static void initialize() {
         if (FUELS_TO_REGISTER.isEmpty()) return;
 
         ORESMod.LOGGER.info("Registering {} dynamic fuels...", FUELS_TO_REGISTER.size());

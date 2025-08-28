@@ -21,6 +21,6 @@ public class ORESModNeoForge {
 
     // -=-=-=- LIFECYCLE EVENTS -=-=-=-
     private void onCommonSetup(final FMLCommonSetupEvent event) {
-        event.enqueueWork(ModFuels::registerAll);
+        event.enqueueWork(ModFuels::initialize);
     }
 }
