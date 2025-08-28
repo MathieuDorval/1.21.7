@@ -1,3 +1,4 @@
+// common/src/main/java/com/ores/config/ModOreGenConfig.java
 package com.ores.config;
 
 import com.ores.ORESMod;
@@ -11,10 +12,6 @@ import java.nio.file.Paths;
 import java.util.*;
 import java.util.stream.Collectors;
 
-/**
- * Classe de gestion de la configuration de génération des minerais.
- * Permet de lire et stocker le contenu de config/ores_generation.toml
- */
 public class ModOreGenConfig {
 
     private static final Path CONFIG_PATH = Paths.get("config", "ores_generation.toml");
@@ -44,9 +41,6 @@ public class ModOreGenConfig {
     ) implements OreGenConfig {}
 
 
-    /**
-     * Initialise la configuration : crée le fichier si besoin et charge son contenu.
-     */
     public static void initialize() {
         try {
             if (Files.notExists(CONFIG_PATH)) {
@@ -60,9 +54,6 @@ public class ModOreGenConfig {
         }
     }
 
-    /**
-     * Charge les configurations depuis ores_generation.toml
-     */
     private static void loadConfig() {
         ORE_GENERATION_CONFIGS.clear();
         try {
@@ -84,6 +75,11 @@ public class ModOreGenConfig {
                     String[] parts = line.split("=", 2);
                     String key = parts[0].trim();
                     String valueStr = parts[1].trim();
+
+                    if (valueStr.contains("#")) {
+                        valueStr = valueStr.substring(0, valueStr.indexOf('#')).trim();
+                    }
+
                     currentSectionParams.put(key, parseValue(valueStr));
                 }
             }
@@ -96,9 +92,6 @@ public class ModOreGenConfig {
         }
     }
 
-    /**
-     * Construit un objet de configuration (OreConfig ou VeinConfig) et le stocke.
-     */
     private static void buildAndStoreParams(String name, Map<String, Object> params) {
         String type = (String) params.get("type");
         if (type == null) {
@@ -134,7 +127,7 @@ public class ModOreGenConfig {
                             (List<String>) params.get("replaceableBlocks")
                     );
                     ORE_GENERATION_CONFIGS.put(name, oreConfig);
-                    ORESMod.LOGGER.info("Loaded 'ore' config for: {}", name);
+                    ORESMod.LOGGER.info("Successfully loaded 'ore' config for: {}", name);
                 }
                 case "vein" -> {
                     List<String> requiredKeys = List.of("ore", "associatedBlock", "bonus_block", "minHeight", "maxHeight");
@@ -186,9 +179,6 @@ public class ModOreGenConfig {
         return valueStr;
     }
 
-    /**
-     * Génère le contenu du fichier de configuration par défaut avec des exemples pour chaque type.
-     */
     private static String generateDefaultTomlContent() {
         return """             
                # --- EXEMPLE DE TYPE "ore" ---
@@ -198,7 +188,7 @@ public class ModOreGenConfig {
                size = 4
                count = 50
                discardChanceOnAirExposure = 0.5
-               generationShape = "uniform" # Peut être "uniform" ou "triangle"
+               generationShape = "uniform"
                minHeight = -64
                maxHeight = 16
                dimension = "minecraft:overworld"
