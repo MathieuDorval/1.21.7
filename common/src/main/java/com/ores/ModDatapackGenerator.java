@@ -19,7 +19,7 @@ import static com.ores.config.ModOreGenConfig.OreConfig;
 
 public class ModDatapackGenerator {
 
-    private static final String DATAPACK_FOLDER = "ores_dynamic_datapack";
+    private static final String DATAPACK_FOLDER = "ores_generations";
 
     public static void generateDynamicDatapack(Path gameDirectory) {
         ORESMod.LOGGER.info("Generating dynamic datapack...");
