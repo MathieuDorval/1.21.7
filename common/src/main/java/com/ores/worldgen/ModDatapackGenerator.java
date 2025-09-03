@@ -1,7 +1,8 @@
-package com.ores;
+package com.ores.worldgen;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
+import com.ores.ORESMod;
 import com.ores.config.ModOreGenConfig;
 import com.ores.core.Materials;
 import com.ores.core.Variants;
