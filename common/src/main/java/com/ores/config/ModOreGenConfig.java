@@ -24,12 +24,17 @@ public class ModOreGenConfig {
             int size,
             int count,
             float discardChanceOnAirExposure,
+            float discardChanceOnLiquidExposure,
             String generationShape,
+            String generationType,
             int minHeight,
             int maxHeight,
             String dimension,
             @Nullable List<String> biomes,
-            @Nullable List<String> replaceableBlocks
+            @Nullable List<String> blacklistedBiomes,
+            @Nullable List<String> replaceableBlocks,
+            @Nullable List<String> blacklistedBlocks,
+            @Nullable List<String> options
     ) implements OreGenConfig {}
 
     public record VeinConfig(
@@ -102,29 +107,29 @@ public class ModOreGenConfig {
         try {
             switch (type.toLowerCase(Locale.ROOT)) {
                 case "ore" -> {
-                    List<String> requiredKeys = List.of("ore", "size", "count", "discardChanceOnAirExposure", "generationShape", "minHeight", "maxHeight", "dimension");
+                    List<String> requiredKeys = List.of("ore", "size", "count", "discardChanceOnAirExposure", "discardChanceOnLiquidExposure", "generationShape", "generationType", "minHeight", "maxHeight", "dimension");
                     validateKeys(name, params, requiredKeys);
 
                     String oreId = (String) params.get("ore");
                     Materials material = Materials.fromId(oreId)
                             .orElseThrow(() -> new IllegalArgumentException("Unknown material for type 'ore': '" + oreId + "'. Please use a valid ID from the Materials enum."));
 
-                    String generationShape = (String) params.get("generationShape");
-                    if (!("uniform".equalsIgnoreCase(generationShape) || "triangle".equalsIgnoreCase(generationShape))) {
-                        throw new IllegalArgumentException("Parameter 'generationShape' must be 'uniform' or 'triangle'.");
-                    }
-
                     OreConfig oreConfig = new OreConfig(
                             material,
                             ((Number) params.get("size")).intValue(),
                             ((Number) params.get("count")).intValue(),
                             ((Number) params.get("discardChanceOnAirExposure")).floatValue(),
-                            generationShape,
+                            ((Number) params.get("discardChanceOnLiquidExposure")).floatValue(),
+                            (String) params.get("generationShape"),
+                            (String) params.get("generationType"),
                             ((Number) params.get("minHeight")).intValue(),
                             ((Number) params.get("maxHeight")).intValue(),
                             (String) params.get("dimension"),
                             (List<String>) params.get("biomes"),
-                            (List<String>) params.get("replaceableBlocks")
+                            (List<String>) params.get("blacklistedBiomes"),
+                            (List<String>) params.get("replaceableBlocks"),
+                            (List<String>) params.get("blacklistedBlocks"),
+                            (List<String>) params.get("options")
                     );
                     ORE_GENERATION_CONFIGS.put(name, oreConfig);
                     ORESMod.LOGGER.info("Successfully loaded 'ore' config for: {}", name);
@@ -188,14 +193,19 @@ public class ModOreGenConfig {
                size = 4
                count = 50
                discardChanceOnAirExposure = 0.5
-               generationShape = "uniform"
+               discardChanceOnLiquidExposure = 1.0
+               generationShape = "vanilla"
+               generationType = "uniform"
                minHeight = -64
                maxHeight = 16
                dimension = "minecraft:overworld"
 
                # Paramètres facultatifs
-               # biomes = ["minecraft:deep_dark", "minecraft:dripstone_caves"]
+               # biomes = ["minecraft:deep_dark", "minecraft:dripstone_caves"] # Whitelist: le minerai n'apparaîtra QUE dans ces biomes.
+               # blacklistedBiomes = ["minecraft:plains"] # Blacklist: le minerai n'apparaîtra PAS dans ce biome.
                # replaceableBlocks = ["minecraft:deepslate", "minecraft:tuff"]
+               # blacklistedBlocks = ["minecraft:bedrock", "minecraft:obsidian"]
+               # options = ["ocean_floor", "cave_surface"]
 
                # --- EXEMPLE DE TYPE "vein" ---
                # Tous les champs de type bloc ('ore', 'associatedBlock', 'bonus_block') DOIVENT avoir un namespace.
@@ -213,3 +223,4 @@ public class ModOreGenConfig {
         return Collections.unmodifiableMap(ORE_GENERATION_CONFIGS);
     }
 }
+
