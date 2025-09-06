@@ -1,11 +1,18 @@
 package com.ores.mixin;
 
 import com.ores.ORESMod;
+import com.ores.worldgen.BiomeContext;
+import com.ores.worldgen.OreGenerationManager;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+
+import java.util.List;
 
 // On cible PlainBuilder car c'est la classe parente qui contient la méthode build().
 // Cela garantit que nous interceptons la construction de TOUS les biomes, quelle que soit la dimension.
@@ -14,24 +21,47 @@ public class BiomeGenerationMixin {
 
     @Inject(method = "build", at = @At("HEAD"))
     private void ores$onBuildBiomeFeatures(CallbackInfoReturnable<BiomeGenerationSettings> cir) {
-        // C'est le point d'injection idéal pour ajouter vos "features" personnalisées
-        // aux paramètres de génération de n'importe quel biome, quelle que soit la dimension.
-        // Lorsque cette méthode est appelée, la plupart des features de vanilla et des autres mods ont déjà été ajoutées.
+        // On récupère la clé du biome depuis notre contexte
+        ResourceKey<Biome> biomeKey = BiomeContext.CURRENT_BIOME_KEY.get();
 
-        // PROBLÈME : À ce stade, nous ne savons pas quel biome est en cours de construction.
-        // La solution consiste généralement à utiliser un autre Mixin (par exemple, sur RegistryDataLoader ou BuiltinRegistries)
-        // pour capturer la ResourceKey du biome en cours de chargement et la stocker dans une variable ThreadLocal.
-        // Nous pourrions alors accéder à ce ThreadLocal ici pour obtenir le contexte.
+        // Si la clé est nulle, on ne fait rien (sécurité pour les biomes non chargés via datapacks)
+        if (biomeKey == null) {
+            return;
+        }
 
-        // PROCHAINES ÉTAPES :
-        // 1. Créer un système pour enregistrer dynamiquement une PlacedFeature pour chaque configuration de minerai.
-        // 2. Implémenter l'approche ThreadLocal pour obtenir la clé du biome actuel.
-        // 3. Ici, récupérer la clé du biome et parcourir vos minerais configurés.
-        // 4. Pour chaque minerai, vérifier s'il doit être généré dans ce biome (dimension, listes de biomes, etc.).
-        // 5. Si c'est le cas, récupérer le Holder de sa PlacedFeature pré-enregistrée et l'ajouter à ce builder, comme ceci :
-        //    ((BiomeGenerationSettings.PlainBuilder)(Object)this).addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, votrePlacedFeatureHolder);
+        var configuredOres = OreGenerationManager.getConfiguredOres();
+        ResourceLocation biomeLocation = biomeKey.location();
 
-        ORESMod.LOGGER.info("ORES Mixin: Interception de la construction des features de biome. Prêt à ajouter des minerais personnalisés.");
+        for (OreGenerationManager.ConfiguredOre ore : configuredOres.values()) {
+            boolean shouldGenerate = true;
+
+            // 1. Vérifier la liste noire des biomes
+            List<ResourceLocation> blacklistedBiomes = ore.blacklistedBiomes();
+            if (blacklistedBiomes != null && blacklistedBiomes.contains(biomeLocation)) {
+                shouldGenerate = false;
+            }
+
+            // 2. Si non banni, vérifier la liste blanche (si elle existe)
+            if (shouldGenerate) {
+                List<ResourceLocation> whitelistedBiomes = ore.biomes();
+                if (whitelistedBiomes != null && !whitelistedBiomes.isEmpty()) {
+                    // Si une whitelist existe, le biome DOIT y être.
+                    if (!whitelistedBiomes.contains(biomeLocation)) {
+                        shouldGenerate = false;
+                    }
+                }
+            }
+
+            if (shouldGenerate) {
+                // TODO: Obtenir la PlacedFeature pour ce minerai et l'ajouter au builder.
+                // Exemple:
+                // Holder<PlacedFeature> featureHolder = OreFeatureManager.getPlacedFeatureHolder(ore.name());
+                // if (featureHolder != null) {
+                //     ((BiomeGenerationSettings.PlainBuilder)(Object)this).addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, featureHolder);
+                // }
+                ORESMod.LOGGER.info("ORES Mod: Ajout potentiel du minerai '{}' au biome '{}'", ore.name(), biomeLocation);
+            }
+        }
     }
 }
 
