@@ -132,7 +132,7 @@ public class ModOreGenConfig {
                             (List<String>) params.get("options")
                     );
                     ORE_GENERATION_CONFIGS.put(name, oreConfig);
-                    ORESMod.LOGGER.info("Successfully loaded 'ore' config for: {}", name);
+                    ORESMod.LOGGER.info("Loaded 'ore' config for: {}", name);
                 }
                 case "vein" -> {
                     List<String> requiredKeys = List.of("ore", "associatedBlock", "bonus_block", "minHeight", "maxHeight");
