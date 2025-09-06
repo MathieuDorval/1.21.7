@@ -4,13 +4,11 @@
  */
 package com.ores.fabric;
 
-import com.ores.worldgen.ModDatapackGenerator;
 import com.ores.ORESMod;
 import com.ores.registries.ModFuels;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.world.level.storage.LevelResource;
 
 public final class ORESModFabric implements ModInitializer {
 
@@ -22,7 +20,5 @@ public final class ORESModFabric implements ModInitializer {
         ServerLifecycleEvents.SERVER_STARTED.register(this::onServerStarted);
     }
     private void onServerStarted(MinecraftServer server) {
-        ModDatapackGenerator.generateDynamicDatapack(server.getWorldPath(LevelResource.ROOT));
-        ModOreGenFabric.registerFeatures();
     }
 }
